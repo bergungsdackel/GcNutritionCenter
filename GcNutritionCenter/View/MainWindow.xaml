@@ -1,0 +1,43 @@
+﻿<Window x:Class="GcNutritionCenter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GcNutritionCenter"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid Margin="0,0,0,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ListView Name="CustomerGrid" Grid.Row="1" Margin="4,178,12,13"  ItemsSource="{Binding CustomerList}" SelectedItem="{Binding SelectedCustomer}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Kundennummer" DisplayMemberBinding="{Binding UserID}" Width="100"/>
+                        <GridViewColumn Header="Vorname" DisplayMemberBinding="{Binding FirstName}" Width="100" />
+                        <GridViewColumn Header="Nachname" DisplayMemberBinding="{Binding LastName}" Width="100" />
+                        <GridViewColumn Header="Guthaben" DisplayMemberBinding="{Binding Balance}" Width="100" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Label Content="Kundennummer" Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="12,5,0,0" Name="label1" VerticalAlignment="Top" />
+            <TextBox Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="110,5,0,0" Name="txtUserID" VerticalAlignment="Top" Width="178" Text="{Binding txtBoxUserID, Mode=OneWay}" IsReadOnly="True"/>
+            <Label Content="Vorname" Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="12,35,0,0" Name="label2" VerticalAlignment="Top" />
+            <TextBox Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="110,35,0,0" Name="txtFirstName" VerticalAlignment="Top" Width="178" Text="{Binding txtBoxFirstName}" />
+            <Label Content="Nachname" Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="12,65,0,0" Name="label3" VerticalAlignment="Top" />
+            <TextBox Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="110,65,0,0" Name="txtLastName" VerticalAlignment="Top" Width="178" Text="{Binding txtBoxLastName}" />
+            <Label Content="Guthaben" Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="12,95,0,0" x:Name="label4" VerticalAlignment="Top" />
+            <TextBox Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="110,95,0,0" x:Name="txtCountry" VerticalAlignment="Top" Width="178" Text="{Binding txtBoxBalance}" />
+
+            <Button Content="Aktualisieren" Grid.Row="1" Width="100" Height="25" HorizontalAlignment="Left" Margin="310,4,0,0" Name="btnUpdate"   
+                VerticalAlignment="Top"   
+                Command="{Binding Path=UpdateCommand}"  />
+
+        </Grid>
+    </Grid>
+</Window>
