@@ -17,7 +17,7 @@
             <ListView Name="CustomerGrid" Grid.Row="1" Margin="4,178,12,13"  ItemsSource="{Binding CustomerList}" SelectedItem="{Binding SelectedCustomer}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Kundennummer" DisplayMemberBinding="{Binding UserID}" Width="100"/>
+                        <GridViewColumn Header="Kundennummer" DisplayMemberBinding="{Binding UserID}"  Width="100"/>
                         <GridViewColumn Header="Vorname" DisplayMemberBinding="{Binding FirstName}" Width="100" />
                         <GridViewColumn Header="Nachname" DisplayMemberBinding="{Binding LastName}" Width="100" />
                         <GridViewColumn Header="Guthaben" DisplayMemberBinding="{Binding Balance}" Width="100" />
