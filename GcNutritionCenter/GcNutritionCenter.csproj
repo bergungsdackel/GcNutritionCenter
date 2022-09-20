@@ -7,4 +7,33 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Images\Icons\closeBtn_default.png" />
+    <None Remove="Images\Icons\closeBtn_MouseOver.png" />
+    <None Remove="Images\Icons\img_balance.png" />
+    <None Remove="Images\Icons\img_home.png" />
+    <None Remove="Images\Icons\img_setting.png" />
+    <None Remove="Images\Icons\img_transactions.png" />
+    <None Remove="Images\Icons\tgBtn_default.png" />
+    <None Remove="Images\Icons\tgBtn_MouseOver.png" />
+    <None Remove="Images\img_background.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helper\" />
+    <Folder Include="Fonts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Icons\closeBtn_default.png" />
+    <Resource Include="Images\Icons\closeBtn_MouseOver.png" />
+    <Resource Include="Images\Icons\img_balance.png" />
+    <Resource Include="Images\Icons\img_home.png" />
+    <Resource Include="Images\Icons\img_setting.png" />
+    <Resource Include="Images\Icons\img_transactions.png" />
+    <Resource Include="Images\Icons\tgBtn_default.png" />
+    <Resource Include="Images\Icons\tgBtn_MouseOver.png" />
+    <Resource Include="Images\img_background.png" />
+  </ItemGroup>
+
 </Project>

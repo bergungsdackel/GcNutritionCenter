@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GcNutritionCenter.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -18,9 +19,9 @@ namespace GcNutritionCenter
             base.OnStartup(e);
             MainWindow window = new MainWindow();
 
-            CustomerViewModel _customerViewModel = new CustomerViewModel();
+            MainWindowViewModel _mainWindowViewModel = new MainWindowViewModel();
 
-            window.DataContext = _customerViewModel;
+            window.DataContext = _mainWindowViewModel;
             window.Show();
         }
     }

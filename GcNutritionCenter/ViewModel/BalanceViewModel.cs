@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace GcNutritionCenter
 {
-    internal class CustomerViewModel : INotifyPropertyChanged
+    internal class BalanceViewModel : INotifyPropertyChanged
     {
         const string fileName = "data.json";
 
@@ -114,7 +114,7 @@ namespace GcNutritionCenter
             }
         }
 
-        public CustomerViewModel()
+        public BalanceViewModel()
         {
             _CustomerList = new List<Customer>();
 
@@ -147,9 +147,9 @@ namespace GcNutritionCenter
 
         private class UpdateCustomer : ICommand
         {
-            CustomerViewModel? _parent;
+            BalanceViewModel? _parent;
 
-            public UpdateCustomer(CustomerViewModel? parent)
+            public UpdateCustomer(BalanceViewModel? parent)
             {
                 if(parent != null)
                 {
