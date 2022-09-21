@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,24 +46,17 @@ namespace GcNutritionCenter
             }
         }
 
-        private void Tg_Btn_Unchecked(object sender, RoutedEventArgs e)
-        {
-            img_bg.Opacity = 1;
-        }
-
-        private void Tg_Btn_Checked(object sender, RoutedEventArgs e)
-        {
-            img_bg.Opacity = 0.3;
-        }
-
         private void BG_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Tg_Btn.IsChecked = false;
         }
 
-        private void CloseBtn_Click(object sender, RoutedEventArgs e)
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Close();
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }                
         }
     }
 }

@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace GcNutritionCenter
 {
-    internal class BalanceViewModel : INotifyPropertyChanged
+    internal class BalanceViewModel : BaseViewModel
     {
         const string fileName = "data.json";
 
@@ -70,8 +70,7 @@ namespace GcNutritionCenter
             }
             set
             {
-                _txtBoxUserID = value;
-                OnPropertyChanged();
+                SetProperty(ref _txtBoxUserID, value);
             }
         }
         private string _txtBoxFirstName;
@@ -83,8 +82,7 @@ namespace GcNutritionCenter
             }
             set
             {
-                _txtBoxFirstName = value;
-                OnPropertyChanged();
+                SetProperty(ref _txtBoxFirstName, value);
             }
         }
         private string _txtBoxLastName;
@@ -96,8 +94,7 @@ namespace GcNutritionCenter
             }
             set
             {
-                _txtBoxLastName = value;
-                OnPropertyChanged();
+                SetProperty(ref _txtBoxLastName, value);
             }
         }
         private string _txtBoxBalance;
@@ -109,8 +106,7 @@ namespace GcNutritionCenter
             }
             set
             {
-                _txtBoxBalance = value;
-                OnPropertyChanged();
+                SetProperty(ref _txtBoxBalance, value);
             }
         }
 
@@ -184,16 +180,6 @@ namespace GcNutritionCenter
 
             #endregion
 
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged Members  
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

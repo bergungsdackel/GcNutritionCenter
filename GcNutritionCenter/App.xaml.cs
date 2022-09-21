@@ -1,4 +1,4 @@
-﻿using GcNutritionCenter.ViewModel;
+﻿using GcNutritionCenter;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -16,13 +16,14 @@ namespace GcNutritionCenter
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            MainWindow = new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+            };
+
+            MainWindow.Show();
+
             base.OnStartup(e);
-            MainWindow window = new MainWindow();
-
-            MainWindowViewModel _mainWindowViewModel = new MainWindowViewModel();
-
-            window.DataContext = _mainWindowViewModel;
-            window.Show();
         }
     }
 }

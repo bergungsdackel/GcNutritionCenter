@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace GcNutritionCenter
 {
     /// <summary>
-    /// Interaktionslogik für Balance.xaml
+    /// Interaktionslogik für Transactions.xaml
     /// </summary>
-    public partial class Balance : UserControl
+    public partial class Transactions : UserControl
     {
-        public Balance()
+        public Transactions()
         {
             InitializeComponent();
         }
