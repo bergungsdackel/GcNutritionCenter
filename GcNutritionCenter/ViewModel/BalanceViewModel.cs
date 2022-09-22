@@ -114,72 +114,69 @@ namespace GcNutritionCenter
         {
             _CustomerList = new List<Customer>();
 
+            // TODO: here maybe load from file/server?
+            string jsonString = File.ReadAllText(fileName);
+            _CustomerList = JsonSerializer.Deserialize<List<Customer>>(jsonString)!;
+
             // test data
             //_CustomerList.Add(new Customer(firstName: "TestFirstName1", lastName: "TestLastName1"));
             //_CustomerList.Add(new Customer(firstName: "TestFirstName2", lastName: "TestLastName2"));
             // test data end
-
-            // TODO: here maybe load from file/server?
-            string jsonString = File.ReadAllText(fileName);
-            _CustomerList = JsonSerializer.Deserialize<List<Customer>>(jsonString)!;
         }
 
+        #region Commands definitions
 
-        private ICommand mUpdater;
+        private ICommand _addBalanceCommand;
+        public ICommand AddBalanceCommand
+        {
+            get
+            {
+                return _addBalanceCommand ?? (_addBalanceCommand = new RelayCommand(param => this.CanAddBalance(), param => this.AddBalance()));
+            }
+        }
+
+        private ICommand _updateCommand;
         public ICommand UpdateCommand
         {
             get
             {
-                mUpdater ??= new UpdateCustomer(this); // if null create new UpdateCustomer
-                return mUpdater;
-            }
-            set
-            {
-                mUpdater = value;
+                return _updateCommand ?? (_updateCommand = new RelayCommand(param => this.CanUpdate(), param => this.Update()));
             }
         }
 
+        #endregion
+
+
         #region Commands
 
-        private class UpdateCustomer : ICommand
+        private bool CanAddBalance()
         {
-            BalanceViewModel? _parent;
+            return true;
+        }
+        private void AddBalance()
+        {
+            string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
+        }
 
-            public UpdateCustomer(BalanceViewModel? parent)
+        public bool CanUpdate()
+        {
+            return true;
+        }
+
+        public void Update()
+        {
+            if (SelectedCustomer != null)
             {
-                if(parent != null)
-                {
-                    _parent = parent;
-                }
+                Customer currentSelectedCustomer = _CustomerList[CustomerList.FindIndex(x => x.UserID == SelectedCustomer.UserID)];
+                currentSelectedCustomer.FirstName = txtBoxFirstName;
+                currentSelectedCustomer.LastName = txtBoxLastName;
+                currentSelectedCustomer.Balance = Int32.Parse(txtBoxBalance);
             }
 
-            #region ICommand Members 
 
-            public event EventHandler? CanExecuteChanged;
-
-            public bool CanExecute(object? parameter)
-            {
-                return true;
-            }
-
-            public void Execute(object? parameter)
-            {
-                if (_parent?.SelectedCustomer != null)
-                {
-                    Customer currentSelectedCustomer = _parent._CustomerList[_parent.CustomerList.FindIndex(x => x.UserID == _parent.SelectedCustomer.UserID)];
-                    currentSelectedCustomer.FirstName = _parent.txtBoxFirstName;
-                    currentSelectedCustomer.LastName = _parent.txtBoxLastName;
-                    currentSelectedCustomer.Balance = Int32.Parse(_parent.txtBoxBalance);
-                }
-
-
-                // convert in json and save after every refresh
-                string jsonString = JsonSerializer.Serialize(_parent?.CustomerList, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(fileName, jsonString);
-            }
-
-            #endregion
-
+            // convert in json and save after every refresh
+            string jsonString = JsonSerializer.Serialize(CustomerList, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(fileName, jsonString);
         }
 
         #endregion

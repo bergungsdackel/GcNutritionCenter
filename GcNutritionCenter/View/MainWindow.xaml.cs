@@ -26,6 +26,8 @@ namespace GcNutritionCenter
             InitializeComponent();
         }
 
+
+        // TODO: code-behind methods to viewmodel
         private void ListViewItem_MouseEnter(object sender, MouseEventArgs e)
         {
             // Set tooltip visibility

@@ -7,6 +7,10 @@
             mc:Ignorable="d" 
             d:DesignHeight="450" d:DesignWidth="800">
 
+    <UserControl.DataContext>
+        <local:BalanceViewModel />
+    </UserControl.DataContext>
+
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -34,8 +38,12 @@
         <Label Content="Guthaben" Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="12,95,0,0" x:Name="label4" VerticalAlignment="Top" />
         <TextBox Grid.Row="1" Height="25" HorizontalAlignment="Left" Margin="110,95,0,0" x:Name="txtCountry" VerticalAlignment="Top" Width="178" Text="{Binding txtBoxBalance}" />
 
-        <Button Content="Aktualisieren" Grid.Row="1" Width="100" Height="25" HorizontalAlignment="Left" Margin="310,4,0,0" Name="btnUpdate"   
+        <Button Content="Aktualisieren" Grid.Row="1" Width="120" Height="25" HorizontalAlignment="Left" Margin="310,4,0,0" Name="btnUpdate"   
                 VerticalAlignment="Top"   
-                Command="{Binding Path=UpdateCommand}"  />
+                Command="{Binding UpdateCommand}"  />
+        <Button Content="Guthaben hinzufügen" Grid.Row="1" Width="120" Height="25" HorizontalAlignment="Left" Margin="310,33,0,0" Name="btnAddBalance"   
+                VerticalAlignment="Top"   
+                Command="{Binding AddBalanceCommand}"  />
+        
     </Grid>
 </UserControl>
