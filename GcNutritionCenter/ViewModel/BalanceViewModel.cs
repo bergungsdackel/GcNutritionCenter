@@ -1,6 +1,7 @@
 ﻿using Microsoft.Windows.Themes;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.IO;
@@ -21,8 +22,8 @@ namespace GcNutritionCenter
         const string fileName = "data.json";
 
 
-        private List<Customer> _CustomerList;
-        public List<Customer> CustomerList
+        private ObservableCollection<Customer> _CustomerList;
+        public ObservableCollection<Customer> CustomerList
         {
             get 
             { 
@@ -112,16 +113,28 @@ namespace GcNutritionCenter
 
         public BalanceViewModel()
         {
-            _CustomerList = new List<Customer>();
-
             // TODO: here maybe load from file/server?
-            string jsonString = File.ReadAllText(fileName);
-            _CustomerList = JsonSerializer.Deserialize<List<Customer>>(jsonString)!;
+            CustomerList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);
+            if(CustomerList == null)
+            {
+                CustomerList = new ObservableCollection<Customer>();
+            }
 
             // test data
             //_CustomerList.Add(new Customer(firstName: "TestFirstName1", lastName: "TestLastName1"));
             //_CustomerList.Add(new Customer(firstName: "TestFirstName2", lastName: "TestLastName2"));
             // test data end
+        }
+
+        ~BalanceViewModel()
+        {
+            this.Dispose();
+        }
+
+        public void Save()
+        {
+            // convert in json and save
+            JsonFile.SaveToFile(CustomerList, fileName);
         }
 
         #region Commands definitions
@@ -135,12 +148,21 @@ namespace GcNutritionCenter
             }
         }
 
-        private ICommand _updateCommand;
-        public ICommand UpdateCommand
+        private ICommand _addCustomerCommand;
+        public ICommand AddCustomerCommand
         {
             get
             {
-                return _updateCommand ?? (_updateCommand = new RelayCommand(param => this.CanUpdate(), param => this.Update()));
+                return _addCustomerCommand ?? (_addCustomerCommand = new RelayCommand(param => this.CanAddCustomer(), param => this.AddCustomer()));
+            }
+        }
+
+        private ICommand _changeCustomerBalanceCommand;
+        public ICommand ChangeCustomerBalanceCommand
+        {
+            get
+            {
+                return _changeCustomerBalanceCommand ?? (_changeCustomerBalanceCommand = new RelayCommand(param => this.CanChangeCustomerBalance(), param => this.ChangeCustomerBalance(param)));
             }
         }
 
@@ -149,36 +171,75 @@ namespace GcNutritionCenter
 
         #region Commands
 
+        private bool CanChangeCustomerBalance()
+        {
+            return true;
+        }
+        private void ChangeCustomerBalance(object param)
+        {
+            if(param != null && param is System.Windows.Controls.DataGridCellInfo)
+            {
+                System.Windows.Controls.DataGridCellInfo cell = (System.Windows.Controls.DataGridCellInfo)param;
+
+                if(cell.Column.Header.Equals("Guthaben"))
+                {
+                    if(cell.Item != null && cell.Item is Customer)
+                    {
+                        Customer? _curCustomer = cell.Item as Customer;
+
+                        // TODO: Dialog to add or subtract balance
+
+                        //placeholder
+                        _curCustomer!.Balance += 100.5;
+
+
+                        //save after edit
+                        this.Save();
+                    }
+                }
+            }
+        }
+
         private bool CanAddBalance()
         {
             return true;
         }
         private void AddBalance()
         {
-            string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
+            if(IsItemSelected)
+            {
+                string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
+                double addValue = Double.Parse(addBalanceValue);
+            }
+            
+
         }
 
-        public bool CanUpdate()
+        public bool CanAddCustomer()
         {
             return true;
         }
 
-        public void Update()
+        public void AddCustomer()
         {
-            if (SelectedCustomer != null)
-            {
-                Customer currentSelectedCustomer = _CustomerList[CustomerList.FindIndex(x => x.UserID == SelectedCustomer.UserID)];
-                currentSelectedCustomer.FirstName = txtBoxFirstName;
-                currentSelectedCustomer.LastName = txtBoxLastName;
-                currentSelectedCustomer.Balance = Int32.Parse(txtBoxBalance);
-            }
+            //placeholder
+            CustomerList.Add(new Customer(firstName: "TestNewCustomer", lastName: "TestNewCustomerLastName", balance: 1337.3));
 
+            // TODO: Dialog with create customer
 
-            // convert in json and save after every refresh
-            string jsonString = JsonSerializer.Serialize(CustomerList, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(fileName, jsonString);
+            this.Save();
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            // TODO: Save to file/server
+            this.Save();
+
+
+            // call from base
+            base.Dispose();
+        }
     }
 }
