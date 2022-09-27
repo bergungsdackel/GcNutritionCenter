@@ -28,7 +28,7 @@
         <DataTemplate DataType="{x:Type local:TransactionsViewModel}">
             <local:Transactions/>
         </DataTemplate>
-        
+
 
 
         <!--// Toggle Button Style Template //-->
@@ -168,12 +168,8 @@
             </Setter>
 
         </Style>
-        
-    </Window.Resources>
 
-    <Window.DataContext>
-        <local:MainWindowViewModel />
-    </Window.DataContext>
+    </Window.Resources>
 
     <Grid>
 

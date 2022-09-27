@@ -8,6 +8,9 @@ namespace GcNutritionCenter
 {
     internal class HomeViewModel : BaseViewModel
     {
+        public HomeViewModel(object parent) : base(parent)
+        {
 
+        }
     }
 }

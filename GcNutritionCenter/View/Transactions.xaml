@@ -7,12 +7,26 @@
             mc:Ignorable="d" 
             d:DesignHeight="450" d:DesignWidth="800">
 
-    <UserControl.DataContext>
-        <local:TransactionsViewModel/>
-    </UserControl.DataContext>
-    
-    <Grid>
-        <Label Content="Label" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFB7FF00"/>
+    <Grid Background="White">
+
+        <DataGrid Name="CustomerGrid" Grid.Row="0" Margin="5,40"  ItemsSource="{Binding TransactionList}" SelectedItem="{Binding SelectedTransaction}" AutoGenerateColumns="False" >
+            
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Transaktions-ID" Binding="{Binding TransactionID}" Width="Auto" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Zeitstempel" Binding="{Binding TimeStamp, StringFormat='dd.MM.yyyy - HH:mm'}" Width="Auto" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Kunde" Width="Auto" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding StringFormat="{}{0} ({1})">
+                            <Binding Path="Customer.UserID" />
+                            <Binding Path="Customer.FirstName" />
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Geändertes Guthaben" Binding="{Binding ChangedBalance, ConverterCulture='de-DE', StringFormat={}{0:+0,0.00;-0,0.00;''} €}" Width="*" IsReadOnly="True"/>
+            </DataGrid.Columns>
+
+
+        </DataGrid>
 
     </Grid>
 </UserControl>

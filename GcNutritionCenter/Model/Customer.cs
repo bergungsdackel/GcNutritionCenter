@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 
 namespace GcNutritionCenter
 {
-    internal class Customer : INotifyPropertyChanged
+    internal class Customer : BaseModel
     {
         RandomNumberGenerator rng = RandomNumberGenerator.Create();
 
@@ -22,8 +22,7 @@ namespace GcNutritionCenter
             }
             set
             {
-                _UserID = value;
-                OnPropertyChanged();
+                SetProperty(ref _UserID, value);
             }
         }
         private string? _FirstName;
@@ -35,8 +34,7 @@ namespace GcNutritionCenter
             }
             set 
             { 
-                _FirstName = value;
-                OnPropertyChanged(); 
+                SetProperty(ref _FirstName, value);
             }
         }
         private string? _LastName;
@@ -48,12 +46,11 @@ namespace GcNutritionCenter
             }
             set
             {
-                _LastName = value;
-                OnPropertyChanged();
+                SetProperty(ref _LastName, value);
             }
         }
-        private double _Balance;
-        public double Balance
+        private decimal _Balance;
+        public decimal Balance
         {
             get
             {
@@ -61,35 +58,32 @@ namespace GcNutritionCenter
             }
             set
             {
-                _Balance = value;
-                OnPropertyChanged();
+                SetProperty(ref _Balance, value);
             }
         }
 
-        public Customer(string? firstName = "", string? lastName = "", double balance = 0)
+        public Customer(string? firstName = "", string? lastName = "", decimal balance = 0)
         {
+            // TODO: Set unique ID, check with a given list?
             UserID = Get5Digits();
             FirstName = firstName;
             LastName = lastName;
             Balance = balance;
         }
 
-        public int Get5Digits()
+        private int Get5Digits()
         {
             var bytes = new byte[4];
             rng.GetBytes(bytes);
             return (int)(BitConverter.ToUInt32(bytes, 0) % 100000);
         }
 
-
-        #region INotifyPropertyChanged Members  
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        public Transaction ChangeBalance(decimal balance)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            this.Balance += balance;
+            Transaction transaction = new Transaction(this, balance);
+            return transaction;
         }
 
-        #endregion
     }
 }

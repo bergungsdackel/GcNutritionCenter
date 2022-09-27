@@ -7,10 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <UserControl.DataContext>
-        <local:SettingsViewModel />
-    </UserControl.DataContext>
-
     <Grid>
         <Label Content="SETTINGS" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF00EDFF"/>
 

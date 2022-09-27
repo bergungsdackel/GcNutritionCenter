@@ -8,8 +8,9 @@ namespace GcNutritionCenter
 {
     internal class SettingsViewModel : BaseViewModel
     {
+        public SettingsViewModel(object parent) : base(parent)
+        {
 
-
-
+        }
     }
 }

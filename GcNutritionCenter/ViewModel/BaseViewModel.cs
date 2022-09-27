@@ -8,8 +8,24 @@ using System.Threading.Tasks;
 
 namespace GcNutritionCenter
 {
-    internal class BaseViewModel : INotifyPropertyChanged, IDisposable
+    abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
     {
+        private object _ParentViewModel;
+        public object ParentViewModel
+        {
+            get
+            {
+                return _ParentViewModel;
+            }
+            set
+            {
+                _ParentViewModel = value;
+            }
+        }
+        public BaseViewModel(object parent)
+        {
+            _ParentViewModel = parent;
+        }
 
         protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = "")
         {

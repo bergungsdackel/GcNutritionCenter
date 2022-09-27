@@ -41,18 +41,105 @@ namespace GcNutritionCenter
             }
         }
 
-        private List<object> _views;
-
-        public MainWindowViewModel()
+        // HOME
+        private Home _HomeView;
+        public Home HomeView
         {
-            _views = new List<object> {
-                new Home(),
-                new Balance(),
-                new Transactions(),
-                new Settings()
+            get
+            {
+                return _HomeView;
+            }
+        }
+        private HomeViewModel _HomeViewModel;
+        public HomeViewModel HomeViewModel
+        {
+            get
+            {
+                return _HomeViewModel;
+            }
+        }
+        // BALANCE
+        private Balance _BalanceView;
+        public Balance BalanceView
+        {
+            get
+            {
+                return _BalanceView;
+            }
+        }
+        private BalanceViewModel _BalanceViewModel;
+        public BalanceViewModel BalanceViewModel
+        {
+            get
+            {
+                return _BalanceViewModel;
+            }
+        }
+        // TRANSACTION
+        private Transactions _TransactionsView;
+        public Transactions TransactionsView
+        {
+            get
+            {
+                return _TransactionsView;
+            }
+        }
+        private TransactionsViewModel _TransactionsViewModel;
+        public TransactionsViewModel TransactionsViewModel
+        {
+            get
+            {
+                return _TransactionsViewModel;
+            }
+        }
+        //SETTINGS
+        private Settings _SettingsView;
+        public Settings SettingsView
+        {
+            get
+            {
+                return _SettingsView;
+            }
+        }
+        private SettingsViewModel _SettingsViewModel;
+        public SettingsViewModel SettingsViewModel
+        {
+            get
+            {
+                return _SettingsViewModel;
+            }
+        }
+
+        private const int countViews = 4;
+
+        public MainWindowViewModel(object parent) : base(parent)
+        {
+            // HOME
+            _HomeViewModel = new HomeViewModel(this);
+            _HomeView = new Home()
+            {
+                DataContext = _HomeViewModel
+            };
+            // BALANCE
+            _BalanceViewModel = new BalanceViewModel(this);
+            _BalanceView = new Balance()
+            {
+                DataContext = _BalanceViewModel
+            };
+            // TRANSACTION
+            _TransactionsViewModel = new TransactionsViewModel(this);
+            _TransactionsView = new Transactions()
+            {
+                DataContext = _TransactionsViewModel
+            };
+            // SETTINGS
+            _SettingsViewModel = new SettingsViewModel(this);
+            _SettingsView = new Settings()
+            {
+                DataContext = _SettingsViewModel
             };
 
-            CurrentView = _views[0]; // home
+            CurrentView = HomeView; // home
         }
 
         #region Commands definitions
@@ -104,9 +191,25 @@ namespace GcNutritionCenter
         }
         private void SelectView(object param)
         {
-            if(param != null && param is int && (int)param < _views.Count)
+            if(param != null && param is int && (int)param < countViews)
             {
-                CurrentView = _views[(int)param];
+                switch((int)param)
+                {
+                    case 0:
+                        CurrentView = HomeView;
+                        break;
+                    case 1:
+                        CurrentView = BalanceView;
+                        break;
+                    case 2:
+                        CurrentView = TransactionsView;
+                        break;
+                    case 3:
+                        CurrentView = SettingsView;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 

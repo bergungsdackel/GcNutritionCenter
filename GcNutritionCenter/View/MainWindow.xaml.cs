@@ -48,6 +48,7 @@ namespace GcNutritionCenter
             }
         }
 
+        // TODO: button checked if clicked on item in ListView
         private void BG_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Tg_Btn.IsChecked = false;
@@ -55,10 +56,17 @@ namespace GcNutritionCenter
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            try
             {
-                this.DragMove();
-            }                
+                if (e.ChangedButton == MouseButton.Left)
+                {
+                    this.DragMove();
+                } 
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }               
         }
     }
 }

@@ -18,7 +18,7 @@ namespace GcNutritionCenter
         {
             MainWindow = new MainWindow()
             {
-                DataContext = new MainWindowViewModel()
+                DataContext = new MainWindowViewModel(this)
             };
 
             MainWindow.Show();

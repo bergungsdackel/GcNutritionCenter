@@ -53,77 +53,19 @@ namespace GcNutritionCenter
             set
             {
                 _SelectedCustomer = value;
-
-                // also update the textboxes
-                txtBoxUserID = _SelectedCustomer.UserID.ToString();
-                txtBoxFirstName = _SelectedCustomer.FirstName!;
-                txtBoxLastName = _SelectedCustomer.LastName!;
-                txtBoxBalance = _SelectedCustomer.Balance.ToString();
             }
         }
 
-        private string _txtBoxUserID;
-        public string txtBoxUserID
+        public BalanceViewModel(object parent) : base(parent)
         {
-            get
-            {
-                return _txtBoxUserID;
-            }
-            set
-            {
-                SetProperty(ref _txtBoxUserID, value);
-            }
-        }
-        private string _txtBoxFirstName;
-        public string txtBoxFirstName
-        {
-            get
-            {
-                return _txtBoxFirstName;
-            }
-            set
-            {
-                SetProperty(ref _txtBoxFirstName, value);
-            }
-        }
-        private string _txtBoxLastName;
-        public string txtBoxLastName
-        {
-            get
-            {
-                return _txtBoxLastName;
-            }
-            set
-            {
-                SetProperty(ref _txtBoxLastName, value);
-            }
-        }
-        private string _txtBoxBalance;
-        public string txtBoxBalance
-        {
-            get
-            {
-                return _txtBoxBalance;
-            }
-            set
-            {
-                SetProperty(ref _txtBoxBalance, value);
-            }
-        }
-
-        public BalanceViewModel()
-        {
+            CustomerList = new ObservableCollection<Customer>();
             // TODO: here maybe load from file/server?
-            CustomerList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);
-            if(CustomerList == null)
+            var tmpList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);
+            if (tmpList != null)
             {
-                CustomerList = new ObservableCollection<Customer>();
+                CustomerList = tmpList;
             }
 
-            // test data
-            //_CustomerList.Add(new Customer(firstName: "TestFirstName1", lastName: "TestLastName1"));
-            //_CustomerList.Add(new Customer(firstName: "TestFirstName2", lastName: "TestLastName2"));
-            // test data end
         }
 
         ~BalanceViewModel()
@@ -138,15 +80,6 @@ namespace GcNutritionCenter
         }
 
         #region Commands definitions
-
-        private ICommand _addBalanceCommand;
-        public ICommand AddBalanceCommand
-        {
-            get
-            {
-                return _addBalanceCommand ?? (_addBalanceCommand = new RelayCommand(param => this.CanAddBalance(), param => this.AddBalance()));
-            }
-        }
 
         private ICommand _addCustomerCommand;
         public ICommand AddCustomerCommand
@@ -188,31 +121,26 @@ namespace GcNutritionCenter
                         Customer? _curCustomer = cell.Item as Customer;
 
                         // TODO: Dialog to add or subtract balance
+                        if (IsItemSelected)
+                        {
+                            string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
+                            decimal addValue = Decimal.Parse(addBalanceValue);  
+                            
+                            Transaction generatedTransaction = _curCustomer!.ChangeBalance(addValue);
+                            MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
+                            if(parentVM != null)
+                            {
+                                parentVM.TransactionsViewModel.TransactionList.Add(generatedTransaction);
+                                parentVM.TransactionsViewModel.Save();
+                            }
 
-                        //placeholder
-                        _curCustomer!.Balance += 100.5;
+                            //save after edit
+                            this.Save();
+                        }
 
-
-                        //save after edit
-                        this.Save();
                     }
                 }
             }
-        }
-
-        private bool CanAddBalance()
-        {
-            return true;
-        }
-        private void AddBalance()
-        {
-            if(IsItemSelected)
-            {
-                string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
-                double addValue = Double.Parse(addBalanceValue);
-            }
-            
-
         }
 
         public bool CanAddCustomer()
@@ -223,7 +151,7 @@ namespace GcNutritionCenter
         public void AddCustomer()
         {
             //placeholder
-            CustomerList.Add(new Customer(firstName: "TestNewCustomer", lastName: "TestNewCustomerLastName", balance: 1337.3));
+            CustomerList.Add(new Customer(firstName: "TestNewCustomer", lastName: "TestNewCustomerLastName"));
 
             // TODO: Dialog with create customer
 
