@@ -13,7 +13,21 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <DataGrid Name="CustomerGrid" Grid.Row="0" Margin="5,40"  ItemsSource="{Binding CustomerList}" SelectedItem="{Binding SelectedCustomer}" AutoGenerateColumns="False" >
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Grid.Row="0" Margin="5">
+            
+            <Button Content="Kunde hinzufügen" Width="120" Height="25" Name="btnAddCustomer"  
+                    Command="{Binding AddCustomerCommand}"  />
+
+            <Button Margin="5,0,0,0" Content="Kunde löschen" Width="120" Height="25" Name="btnDeleteCustomer"  
+                    Command="{Binding DeleteCustomerCommand}"  />
+
+        </StackPanel>
+        
+
+
+        <DataGrid Name="CustomerGrid" Grid.Row="1" Margin="5,5,5,5"  ItemsSource="{Binding CustomerList}" SelectedItem="{Binding SelectedCustomer}" AutoGenerateColumns="False"
+                  ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Kundennummer" Binding="{Binding UserID}" Width="Auto" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Vorname" Binding="{Binding FirstName}" Width="Auto"/>
@@ -30,10 +44,6 @@
             </i:Interaction.Triggers>
 
         </DataGrid>
-
-        <Button Content="Kunde hinzufügen" Grid.Row="1" Width="120" Height="25" HorizontalAlignment="Left" Margin="310,4,0,0" Name="btnAddCustomer"   
-                VerticalAlignment="Top"   
-                Command="{Binding AddCustomerCommand}"  />
 
     </Grid>
 </UserControl>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -47,8 +48,16 @@ namespace GcNutritionCenter
             if(tmpList != null)
             {
                 TransactionList = tmpList;
-            }           
+            }
 
+            // add events
+            TransactionList.CollectionChanged += TransactionListChanged;
+
+        }
+
+        private void TransactionListChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.Save();
         }
 
         ~TransactionsViewModel()

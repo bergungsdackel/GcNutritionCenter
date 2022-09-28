@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.IO;
@@ -65,7 +66,13 @@ namespace GcNutritionCenter
             {
                 CustomerList = tmpList;
             }
-
+            
+            // add events
+            foreach(Customer customer in CustomerList)
+            {
+                customer.PropertyChanged += CustomerChanged;
+            }
+            CustomerList.CollectionChanged += CustomerListChanged;
         }
 
         ~BalanceViewModel()
@@ -79,6 +86,36 @@ namespace GcNutritionCenter
             JsonFile.SaveToFile(CustomerList, fileName);
         }
 
+        #region Events
+
+        private void CustomerChanged(object? sender, EventArgs e)
+        {
+            this.Save();
+        }
+
+        private void CustomerListChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach(Customer customer in e.NewItems!)
+                {
+                    customer.PropertyChanged -= CustomerChanged;
+                    customer.PropertyChanged += CustomerChanged;
+                }
+            }
+            else if(e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (Customer customer in e.NewItems!)
+                {
+                    customer.PropertyChanged -= CustomerChanged;
+                }
+            }
+
+            this.Save();
+        }
+
+        #endregion
+
         #region Commands definitions
 
         private ICommand _addCustomerCommand;
@@ -87,6 +124,15 @@ namespace GcNutritionCenter
             get
             {
                 return _addCustomerCommand ?? (_addCustomerCommand = new RelayCommand(param => this.CanAddCustomer(), param => this.AddCustomer()));
+            }
+        }
+
+        private ICommand _deleteCustomerCommand;
+        public ICommand DeleteCustomerCommand
+        {
+            get
+            {
+                return _deleteCustomerCommand ?? (_deleteCustomerCommand = new RelayCommand(param => this.CanDeleteCustomer(), param => this.DeleteCustomer()));
             }
         }
 
@@ -100,7 +146,6 @@ namespace GcNutritionCenter
         }
 
         #endregion
-
 
         #region Commands
 
@@ -124,20 +169,25 @@ namespace GcNutritionCenter
                         if (IsItemSelected)
                         {
                             string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
-                            decimal addValue = Decimal.Parse(addBalanceValue);  
-                            
-                            Transaction generatedTransaction = _curCustomer!.ChangeBalance(addValue);
-                            MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
-                            if(parentVM != null)
+                            if(addBalanceValue != String.Empty)
                             {
-                                parentVM.TransactionsViewModel.TransactionList.Add(generatedTransaction);
-                                parentVM.TransactionsViewModel.Save();
+                                addBalanceValue = addBalanceValue.Replace('.', ',');
+                                decimal addValue;
+                                if(Decimal.TryParse(addBalanceValue, out addValue))
+                                {
+                                    Transaction generatedTransaction = _curCustomer!.ChangeBalance(addValue);
+                                    MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
+                                    if(parentVM != null)
+                                    {
+                                        parentVM.TransactionsViewModel.TransactionList.Add(generatedTransaction);
+                                    }
+                                }
+                                else
+                                {
+                                    // not a number
+                                }                           
                             }
-
-                            //save after edit
-                            this.Save();
                         }
-
                     }
                 }
             }
@@ -147,7 +197,6 @@ namespace GcNutritionCenter
         {
             return true;
         }
-
         public void AddCustomer()
         {
             //placeholder
@@ -155,7 +204,42 @@ namespace GcNutritionCenter
 
             // TODO: Dialog with create customer
 
-            this.Save();
+        }
+
+        public bool CanDeleteCustomer()
+        {            
+            return (SelectedCustomer != null);
+        }
+        public void DeleteCustomer()
+        {
+            try
+            {
+                if(SelectedCustomer != null)
+                {
+                    // TODO: ask if also delete every transaction related to customer
+                    if(true) // placeholder for dialog
+                    {
+                        MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
+                        if(parentVM != null)
+                        {
+                            foreach(Transaction transaction in parentVM.TransactionsViewModel.TransactionList.ToArray())
+                            {
+                                if(transaction.Customer!.UserID == SelectedCustomer.UserID)
+                                {
+                                    parentVM.TransactionsViewModel.TransactionList.Remove(transaction);
+                                }
+                            }
+                        }
+                    }
+
+                    // TODO: Dialog, "are you sure..."
+                    CustomerList.Remove(SelectedCustomer);           
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         #endregion

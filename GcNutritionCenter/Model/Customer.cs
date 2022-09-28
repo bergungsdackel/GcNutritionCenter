@@ -75,7 +75,17 @@ namespace GcNutritionCenter
         {
             var bytes = new byte[4];
             rng.GetBytes(bytes);
-            return (int)(BitConverter.ToUInt32(bytes, 0) % 100000);
+            int result = (int)(BitConverter.ToUInt32(bytes, 0) % 100000);
+            if(CountDigits(result) != 5)
+            {
+                return Get5Digits();
+            }
+            return result;
+        }
+
+        private int CountDigits(int number)
+        {
+            return (int)Math.Floor(Math.Log10(number) + 1);
         }
 
         public Transaction ChangeBalance(decimal balance)

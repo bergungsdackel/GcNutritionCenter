@@ -140,6 +140,17 @@ namespace GcNutritionCenter
             };
 
             CurrentView = HomeView; // home
+
+            // if crash
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            // save everything
+            BalanceViewModel.Save();
+            TransactionsViewModel.Save();
         }
 
         #region Commands definitions
@@ -237,6 +248,9 @@ namespace GcNutritionCenter
         }
         private void Close()
         {
+            BalanceViewModel.Save();
+            TransactionsViewModel.Save();
+
             System.Windows.Application.Current.Shutdown();
         }
 
