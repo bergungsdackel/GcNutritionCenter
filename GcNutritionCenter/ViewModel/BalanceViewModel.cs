@@ -23,6 +23,8 @@ namespace GcNutritionCenter
         const string fileName = "data.json";
 
 
+
+
         private ObservableCollection<Customer> _CustomerList;
         public ObservableCollection<Customer> CustomerList
         {
@@ -33,6 +35,19 @@ namespace GcNutritionCenter
             set
             {
                 _CustomerList = value;
+            }
+        }
+
+        private ObservableCollection<Customer> _ItemsSource;
+        public ObservableCollection<Customer> ItemsSource
+        {
+            get
+            {
+                return _ItemsSource;
+            }
+            set
+            {
+                SetProperty(ref _ItemsSource, value);
             }
         }
 
@@ -57,15 +72,30 @@ namespace GcNutritionCenter
             }
         }
 
+        private string _searchBoxText;
+        public string SearchBoxText
+        {
+            get
+            {
+                return _searchBoxText;
+            }
+            set
+            {
+                SetProperty(ref _searchBoxText, value);
+            }
+        }
+
         public BalanceViewModel(object parent) : base(parent)
         {
             CustomerList = new ObservableCollection<Customer>();
             // TODO: here maybe load from file/server?
-            var tmpList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);
+            ObservableCollection<Customer>? tmpList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);
             if (tmpList != null)
             {
-                CustomerList = tmpList;
+                CustomerList = new ObservableCollection<Customer>(tmpList);
             }
+
+            ItemsSource = CustomerList;
             
             // add events
             foreach(Customer customer in CustomerList)
@@ -105,7 +135,7 @@ namespace GcNutritionCenter
             }
             else if(e.Action == NotifyCollectionChangedAction.Remove)
             {
-                foreach (Customer customer in e.NewItems!)
+                foreach (Customer customer in e.OldItems!)
                 {
                     customer.PropertyChanged -= CustomerChanged;
                 }
@@ -145,9 +175,58 @@ namespace GcNutritionCenter
             }
         }
 
+        private ICommand _keyUpCommand;
+        public ICommand KeyUpCommand
+        {
+            get
+            {
+                return _keyUpCommand ?? (_keyUpCommand = new RelayCommand(param => this.CanKeyUp(), param => this.KeyUp()));
+            }
+        }
+
+        private ICommand _deleteSearchTextCommand;
+        public ICommand DeleteSearchTextCommand
+        {
+            get
+            {
+                return _deleteSearchTextCommand ?? (_deleteSearchTextCommand = new RelayCommand(param => this.CanDeleteSearchText(), param => this.DeleteSearchText()));
+            }
+        }
+
         #endregion
 
         #region Commands
+
+        private bool CanDeleteSearchText()
+        {
+            return true;
+        }
+        private void DeleteSearchText()
+        {
+            SearchBoxText = String.Empty;
+            KeyUp();
+        }
+
+        private bool CanKeyUp()
+        {
+            return true;
+        }
+        private void KeyUp()
+        {
+            string txtBoxText = SearchBoxText;
+            if(txtBoxText != null)
+            {
+               if(txtBoxText.Length > 0)
+                {
+                    var filtered = CustomerList.Where(x => ((x.FirstName!.IndexOf(txtBoxText, 0, StringComparison.OrdinalIgnoreCase) != -1) || (x.LastName!.IndexOf(txtBoxText, 0, StringComparison.OrdinalIgnoreCase) != -1) || x.UserID.ToString().Contains(txtBoxText)));
+                    ItemsSource = new ObservableCollection<Customer>(filtered);
+                }
+                else
+                {
+                    ItemsSource = CustomerList;
+                }
+            } 
+        }
 
         private bool CanChangeCustomerBalance()
         {
@@ -200,7 +279,7 @@ namespace GcNutritionCenter
         public void AddCustomer()
         {
             //placeholder
-            CustomerList.Add(new Customer(firstName: "TestNewCustomer", lastName: "TestNewCustomerLastName"));
+            CustomerList.Add(new Customer(firstName: "TestNewCustomer", lastName: "TestNewCustomerLastName", collectionToCheckForID: CustomerList));
 
             // TODO: Dialog with create customer
 
@@ -216,8 +295,12 @@ namespace GcNutritionCenter
             {
                 if(SelectedCustomer != null)
                 {
+                    // TODO: Dialog, "are you sure..."
+
+
+
                     // TODO: ask if also delete every transaction related to customer
-                    if(true) // placeholder for dialog
+                    if (true) // placeholder for dialog
                     {
                         MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
                         if(parentVM != null)
@@ -231,8 +314,7 @@ namespace GcNutritionCenter
                             }
                         }
                     }
-
-                    // TODO: Dialog, "are you sure..."
+                    
                     CustomerList.Remove(SelectedCustomer);           
                 }
             }

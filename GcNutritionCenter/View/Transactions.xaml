@@ -9,7 +9,7 @@
 
     <Grid Background="White">
 
-        <DataGrid Name="CustomerGrid" Grid.Row="0" Margin="5,40"  ItemsSource="{Binding TransactionList}" SelectedItem="{Binding SelectedTransaction}" AutoGenerateColumns="False" >
+        <DataGrid Name="CustomerGrid" Grid.Row="0" Margin="5,45"  ItemsSource="{Binding TransactionList}" SelectedItem="{Binding SelectedTransaction}" AutoGenerateColumns="False" CanUserAddRows="False">
             
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Transaktions-ID" Binding="{Binding TransactionID}" Width="Auto" IsReadOnly="True"/>

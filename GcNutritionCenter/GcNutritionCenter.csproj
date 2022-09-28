@@ -11,6 +11,7 @@
     <None Remove="Images\Icons\closeBtn_default.png" />
     <None Remove="Images\Icons\closeBtn_MouseOver.png" />
     <None Remove="Images\Icons\img_balance.png" />
+    <None Remove="Images\Icons\img_cancel.png" />
     <None Remove="Images\Icons\img_home.png" />
     <None Remove="Images\Icons\img_setting.png" />
     <None Remove="Images\Icons\img_transactions.png" />
@@ -31,6 +32,7 @@
     <Resource Include="Images\Icons\closeBtn_default.png" />
     <Resource Include="Images\Icons\closeBtn_MouseOver.png" />
     <Resource Include="Images\Icons\img_balance.png" />
+    <Resource Include="Images\Icons\img_cancel.png" />
     <Resource Include="Images\Icons\img_home.png" />
     <Resource Include="Images\Icons\img_setting.png" />
     <Resource Include="Images\Icons\img_transactions.png" />

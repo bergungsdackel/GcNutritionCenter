@@ -47,7 +47,7 @@ namespace GcNutritionCenter
             var tmpList = JsonFile.ReadFromFile<ObservableCollection<Transaction>>(fileName);
             if(tmpList != null)
             {
-                TransactionList = tmpList;
+                TransactionList = new ObservableCollection<Transaction>(tmpList);
             }
 
             // add events

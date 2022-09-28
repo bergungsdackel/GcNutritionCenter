@@ -26,34 +26,6 @@ namespace GcNutritionCenter
             InitializeComponent();
         }
 
-
-        // TODO: code-behind methods to viewmodel
-        private void ListViewItem_MouseEnter(object sender, MouseEventArgs e)
-        {
-            // Set tooltip visibility
-
-            if (Tg_Btn.IsChecked == true)
-            {
-                tt_home.Visibility = Visibility.Collapsed;
-                tt_balance.Visibility = Visibility.Collapsed;
-                tt_transactions.Visibility = Visibility.Collapsed;
-                tt_settings.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                tt_home.Visibility = Visibility.Visible;
-                tt_balance.Visibility = Visibility.Visible;
-                tt_transactions.Visibility = Visibility.Visible;
-                tt_settings.Visibility = Visibility.Visible;
-            }
-        }
-
-        // TODO: button checked if clicked on item in ListView
-        private void BG_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Tg_Btn.IsChecked = false;
-        }
-
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             try

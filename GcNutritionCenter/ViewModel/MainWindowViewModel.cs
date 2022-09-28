@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
 
@@ -24,6 +25,68 @@ namespace GcNutritionCenter
             set
             {
                 SetProperty(ref _bgOpacity, value);
+            }
+        }
+
+        private Visibility _ttHomeVisibility;
+        public Visibility TtHomeVisibility
+        {
+            get
+            {
+                return _ttHomeVisibility;
+            }
+            set
+            {
+                SetProperty(ref _ttHomeVisibility, value);
+            }
+        }
+        private Visibility _ttBalanceVisibility;
+        public Visibility TtBalanceVisibility
+        {
+            get
+            {
+                return _ttBalanceVisibility;
+            }
+            set
+            {
+                SetProperty(ref _ttBalanceVisibility, value);
+            }
+        }
+        private Visibility _ttTransactionsVisibility;
+        public Visibility TtTransactionsVisibility
+        {
+            get
+            {
+                return _ttTransactionsVisibility;
+            }
+            set
+            {
+                SetProperty(ref _ttTransactionsVisibility, value);
+            }
+        }
+        private Visibility _ttSettingsVisibility;
+        public Visibility TtSettingsVisibility
+        {
+            get
+            {
+                return _ttSettingsVisibility;
+            }
+            set
+            {
+                SetProperty(ref _ttSettingsVisibility, value);
+            }
+        }
+
+        private bool _TgBtnIsChecked =  false;
+        public bool TgBtnIsChecked
+        {
+            get
+            {
+                return _TgBtnIsChecked;
+            }
+            set
+            {
+                SetProperty(ref _TgBtnIsChecked, value);
             }
         }
 
@@ -191,8 +254,31 @@ namespace GcNutritionCenter
             }
         }
 
+        private ICommand _mouseEnterCommand;
+        public ICommand MouseEnterCommand
+        {
+            get
+            {
+                return _mouseEnterCommand ?? (_mouseEnterCommand = new RelayCommand(param => this.CanMouseEnter(), param => this.MouseEnter()));
+            }
+        }
+
+        private ICommand _previewMouseLeftButtonDownCommand;
+        public ICommand PreviewMouseLeftButtonDownCommand
+        {
+            get
+            {
+                return _previewMouseLeftButtonDownCommand ?? (_previewMouseLeftButtonDownCommand = new RelayCommand(param => this.CanPreviewMouseLeftButtonDown(), param => this.PreviewMouseLeftButtonDown()));
+            }
+        }
+
 
         #endregion
+
+        public void CloseNavigationBar()
+        {
+            TgBtnIsChecked = false;
+        }
 
         #region Commands
 
@@ -221,6 +307,40 @@ namespace GcNutritionCenter
                     default:
                         break;
                 }
+                CloseNavigationBar();
+            }
+        }
+
+        private bool CanPreviewMouseLeftButtonDown()
+        {
+            return true;
+        }
+        private void PreviewMouseLeftButtonDown()
+        {
+            CloseNavigationBar();
+        }
+
+        private bool CanMouseEnter()
+        {
+            return true;
+        }
+        private void MouseEnter()
+        {
+            // Set tooltip visibility
+
+            if (TgBtnIsChecked == true)
+            {
+                TtHomeVisibility = Visibility.Collapsed;
+                TtBalanceVisibility = Visibility.Collapsed;
+                TtTransactionsVisibility = Visibility.Collapsed;
+                TtSettingsVisibility = Visibility.Collapsed;
+            }
+            else
+            {
+                TtHomeVisibility = Visibility.Visible;
+                TtBalanceVisibility = Visibility.Visible;
+                TtTransactionsVisibility = Visibility.Visible;
+                TtSettingsVisibility = Visibility.Visible;
             }
         }
 

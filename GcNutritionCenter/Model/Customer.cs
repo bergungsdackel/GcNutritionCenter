@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Collections;
+using System.Text.Json.Serialization;
+using System.Windows.Documents;
+using System.Windows.Media.Animation;
 
 namespace GcNutritionCenter
 {
@@ -62,10 +66,24 @@ namespace GcNutritionCenter
             }
         }
 
-        public Customer(string? firstName = "", string? lastName = "", decimal balance = 0)
+        [JsonConstructor]
+        public Customer()
         {
-            // TODO: Set unique ID, check with a given list?
+            
+        }
+        public Customer(string? firstName = "", string? lastName = "", decimal balance = 0, IEnumerable<Customer>? collectionToCheckForID = null)
+        {
             UserID = Get5Digits();
+
+            //Set unique ID, check with a given list ?
+            if (collectionToCheckForID != null)
+            {
+                while (collectionToCheckForID.FirstOrDefault(x => x.UserID == UserID) != null)
+                {
+                    UserID = Get5Digits();
+                }
+            }
+
             FirstName = firstName;
             LastName = lastName;
             Balance = balance;
