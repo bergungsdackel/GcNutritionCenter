@@ -39,7 +39,7 @@
     </UserControl.Resources>
 
 
-    <Grid Background="White">
+    <Grid Background="#9199a3">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -73,8 +73,9 @@
 
 
 
-        <DataGrid Name="CustomerGrid" Grid.Row="1" Margin="5,5,5,5"  ItemsSource="{Binding ItemsSource}" SelectedItem="{Binding SelectedCustomer}" AutoGenerateColumns="False"
-                  ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" CanUserAddRows="False" SelectionMode="Single">
+        <DataGrid Background="#9199a3" Name="CustomerGrid" Grid.Row="1" Margin="5"  ItemsSource="{Binding ItemsSource}" SelectedItem="{Binding SelectedCustomer}" AutoGenerateColumns="False"
+                  ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" CanUserAddRows="False" SelectionMode="Single"
+                  HeadersVisibility="Column">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Kundennummer" Binding="{Binding UserID}" Width="Auto" IsReadOnly="True"/>
@@ -93,9 +94,23 @@
 
             <DataGrid.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
-            </DataGrid.Resources>
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow" >
+
+                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}" >
+                    <Setter Property="Background" Value="#2E333A" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="1 1 1 1"/>
+                    <Setter Property="Margin" Value="-1,-1,0,0" />
+                    <Setter Property="Height" Value="35" />
+                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style>
+                <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}" >
+                    
+                </Style>
+                <Style BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="{x:Type DataGridRow}" >
+                    <Setter Property="Background" Value="#7d848c"/>
+                    <Setter Property="Height" Value="28"/>
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="#404D5B"/>
@@ -111,7 +126,7 @@
                         </MultiTrigger>
                     </Style.Triggers>
                 </Style>
-            </DataGrid.RowStyle>
+            </DataGrid.Resources>           
 
         </DataGrid>
 
