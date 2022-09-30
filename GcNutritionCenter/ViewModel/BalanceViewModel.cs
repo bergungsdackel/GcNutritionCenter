@@ -199,7 +199,7 @@ namespace GcNutritionCenter
 
         private bool CanDeleteSearchText()
         {
-            return true;
+            return (SearchBoxText != String.Empty && SearchBoxText != null);
         }
         private void DeleteSearchText()
         {

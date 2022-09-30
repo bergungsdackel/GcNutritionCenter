@@ -302,7 +302,7 @@ namespace GcNutritionCenter
                         CurrentView = TransactionsView;
                         break;
                     case 3:
-                        CurrentView = SettingsView;
+                        //CurrentView = SettingsView;
                         break;
                     default:
                         break;

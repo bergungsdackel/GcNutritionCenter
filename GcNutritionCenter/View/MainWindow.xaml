@@ -16,21 +16,6 @@
 
     <Window.Resources>
 
-        <!--// The templates for the view of each page model. //-->
-
-
-        <DataTemplate DataType="{x:Type local:HomeViewModel}">
-            <local:Home/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type local:BalanceViewModel}">
-            <local:Balance/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type local:TransactionsViewModel}">
-            <local:Transactions/>
-        </DataTemplate>
-
-
-
         <!--// Toggle Button Style Template //-->
 
         <ImageBrush x:Key="tb_mouse_over"

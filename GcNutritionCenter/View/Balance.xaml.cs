@@ -24,5 +24,15 @@ namespace GcNutritionCenter
         {
             InitializeComponent();
         }
+
+        // TODO: This in MVVM-Style
+        private void OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            //if (sender is DataGrid)
+            //{
+            //    DataGrid grid = (DataGrid)sender;
+            //    grid!.UnselectAll();
+            //}
+        }
     }
 }
