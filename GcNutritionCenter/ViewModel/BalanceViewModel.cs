@@ -247,25 +247,35 @@ namespace GcNutritionCenter
                         // TODO: Dialog to add or subtract balance
                         if (IsItemSelected)
                         {
-                            string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
-                            if(addBalanceValue != String.Empty)
+                            //string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
+                            CustomDialog inputDialog = new CustomDialog("Wie viel Guthaben soll hinzugefügt werden?", CustomDialog.InputType.YesNo);
+                            if(inputDialog.ShowDialog() == true)
                             {
-                                addBalanceValue = addBalanceValue.Replace('.', ',');
-                                decimal addValue;
-                                if(Decimal.TryParse(addBalanceValue, out addValue))
+                                string addBalanceValueString = inputDialog.Answer;
+                                if(addBalanceValueString != String.Empty)
                                 {
-                                    Transaction generatedTransaction = _curCustomer!.ChangeBalance(addValue);
-                                    MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
-                                    if(parentVM != null)
+                                    addBalanceValueString = addBalanceValueString.Replace('.', ',');
+                                    decimal addValue;
+                                    if(Decimal.TryParse(addBalanceValueString, out addValue))
                                     {
-                                        parentVM.TransactionsViewModel.TransactionList.Add(generatedTransaction);
+                                        Transaction generatedTransaction = _curCustomer!.ChangeBalance(addValue);
+                                        MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
+                                        if(parentVM != null)
+                                        {
+                                            parentVM.TransactionsViewModel.TransactionList.Add(generatedTransaction);
+                                        }
                                     }
+                                    else
+                                    {
+                                        // not a number
+                                    }                           
                                 }
-                                else
-                                {
-                                    // not a number
-                                }                           
                             }
+                            else // debug
+                            {
+                                // canceled
+                            }
+
                         }
                     }
                 }
