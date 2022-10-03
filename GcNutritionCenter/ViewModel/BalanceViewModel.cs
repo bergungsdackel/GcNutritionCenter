@@ -248,7 +248,7 @@ namespace GcNutritionCenter
                         if (IsItemSelected)
                         {
                             //string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
-                            CustomDialog inputDialog = new CustomDialog("Wie viel Guthaben soll hinzugefügt werden?", CustomDialog.InputType.YesNo);
+                            CustomDialog inputDialog = new CustomDialog("Wie viel Guthaben soll hinzugefügt werden?", CustomDialog.InputType.InputOkCancel);
                             if(inputDialog.ShowDialog() == true)
                             {
                                 string addBalanceValueString = inputDialog.Answer;
