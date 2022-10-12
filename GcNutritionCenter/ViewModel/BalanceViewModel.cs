@@ -244,38 +244,23 @@ namespace GcNutritionCenter
                     {
                         Customer? _curCustomer = cell.Item as Customer;
 
-                        // TODO: Dialog to add or subtract balance
                         if (IsItemSelected)
                         {
-                            //string addBalanceValue = CustomDialog.Show("Wie viel Guthaben soll hinzugefügt werden?", "Guthaben hinzufügen", inputType: CustomDialog.InputType.Text);
-                            CustomDialog inputDialog = new CustomDialog("Wie viel Guthaben soll hinzugefügt werden?", CustomDialog.InputType.InputOkCancel);
-                            if(inputDialog.ShowDialog() == true)
+                            ChangeCustomerBalanceDialog inputDialog = new ChangeCustomerBalanceDialog();
+                            if (inputDialog.ShowDialog() == true && inputDialog.Answer != null)
                             {
-                                string addBalanceValueString = inputDialog.Answer;
-                                if(addBalanceValueString != String.Empty)
+                                decimal addValue = (decimal)inputDialog.Answer;
+                                Transaction generatedTransaction = _curCustomer!.ChangeBalance(addValue);
+                                MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
+                                if(parentVM != null)
                                 {
-                                    addBalanceValueString = addBalanceValueString.Replace('.', ',');
-                                    decimal addValue;
-                                    if(Decimal.TryParse(addBalanceValueString, out addValue))
-                                    {
-                                        Transaction generatedTransaction = _curCustomer!.ChangeBalance(addValue);
-                                        MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
-                                        if(parentVM != null)
-                                        {
-                                            parentVM.TransactionsViewModel.TransactionList.Add(generatedTransaction);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        // not a number
-                                    }                           
+                                    parentVM.TransactionsViewModel.TransactionList.Add(generatedTransaction);
                                 }
                             }
-                            else // debug
+                            else
                             {
                                 // canceled
                             }
-
                         }
                     }
                 }

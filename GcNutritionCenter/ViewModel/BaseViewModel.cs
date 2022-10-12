@@ -10,8 +10,8 @@ namespace GcNutritionCenter
 {
     abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
     {
-        private object _ParentViewModel;
-        public object ParentViewModel
+        private object? _ParentViewModel;
+        public object? ParentViewModel
         {
             get
             {
@@ -22,7 +22,7 @@ namespace GcNutritionCenter
                 _ParentViewModel = value;
             }
         }
-        public BaseViewModel(object parent)
+        public BaseViewModel(object? parent)
         {
             _ParentViewModel = parent;
         }
