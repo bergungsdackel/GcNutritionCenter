@@ -44,4 +44,15 @@
     <Resource Include="Images\img_background.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="View\Dialogs\CustomDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\Dialogs\AddCustomerDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
 </Project>

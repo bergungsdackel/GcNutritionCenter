@@ -273,11 +273,24 @@ namespace GcNutritionCenter
         }
         public void AddCustomer()
         {
-            //placeholder
-            CustomerList.Add(new Customer(firstName: "TestNewCustomer", lastName: "TestNewCustomerLastName", collectionToCheckForID: CustomerList));
-
-            // TODO: Dialog with create customer
-
+            AddCustomerDialog inputDialog = new AddCustomerDialog();
+            if (inputDialog.ShowDialog() == true)
+            {
+                (string firstname, string lastname) = inputDialog.Answer;
+                if(firstname.Length + lastname.Length >= 1)
+                {
+                    CustomerList.Add(new Customer(firstName: !string.IsNullOrEmpty(firstname) ? firstname : "", lastName: !string.IsNullOrEmpty(lastname) ? lastname : "", collectionToCheckForID: CustomerList));
+                }
+                else
+                {
+                    CustomDialog warningDialog = new CustomDialog("Name zu kurz!", CustomDialog.InputType.Ok);
+                    warningDialog.ShowDialog();
+                }
+            }
+            else
+            {
+                // canceled
+            }
         }
 
         public bool CanDeleteCustomer()
@@ -290,27 +303,26 @@ namespace GcNutritionCenter
             {
                 if(SelectedCustomer != null)
                 {
-                    // TODO: Dialog, "are you sure..."
-
-
-
-                    // TODO: ask if also delete every transaction related to customer
-                    if (true) // placeholder for dialog
+                    CustomDialog areYouSureDialog = new CustomDialog($"Bist du sicher, dass du den Kunden \"{(SelectedCustomer.FirstName + SelectedCustomer.LastName).Trim()}\" löschen möchtest?", CustomDialog.InputType.YesNo);
+                    if(areYouSureDialog.ShowDialog() == true)
                     {
-                        MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
-                        if(parentVM != null)
+                        CustomDialog deleteTransactionsDialog = new CustomDialog($"Möchtest du auch alle relevanten Transaktionen zu \"{(SelectedCustomer.FirstName + SelectedCustomer.LastName).Trim()}\" löschen?", CustomDialog.InputType.YesNo);
+                        if (deleteTransactionsDialog.ShowDialog() == true)
                         {
-                            foreach(Transaction transaction in parentVM.TransactionsViewModel.TransactionList.ToArray())
+                            MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
+                            if(parentVM != null)
                             {
-                                if(transaction.Customer!.UserID == SelectedCustomer.UserID)
+                                foreach(Transaction transaction in parentVM.TransactionsViewModel.TransactionList.ToArray())
                                 {
-                                    parentVM.TransactionsViewModel.TransactionList.Remove(transaction);
+                                    if(transaction.Customer!.UserID == SelectedCustomer.UserID)
+                                    {
+                                        parentVM.TransactionsViewModel.TransactionList.Remove(transaction);
+                                    }
                                 }
                             }
                         }
-                    }
-                    
-                    CustomerList.Remove(SelectedCustomer);           
+                        CustomerList.Remove(SelectedCustomer);
+                    }          
                 }
             }
             catch(Exception ex)
@@ -323,7 +335,6 @@ namespace GcNutritionCenter
 
         public override void Dispose()
         {
-            // TODO: Save to file/server
             this.Save();
 
 

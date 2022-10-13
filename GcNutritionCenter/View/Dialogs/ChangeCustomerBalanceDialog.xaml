@@ -20,7 +20,7 @@
                 <Grid Background="#b3bbc4">
                     <Image Source="../../Images/Icons/img_euro.png" DockPanel.Dock="Left" HorizontalAlignment="Right" Margin="3,3,0,3"/>
                 </Grid>
-                <TextBox Name="txtInput" Text="{Binding ElementName=txtInput, Path=Text, StringFormat=C}" FontSize="14" MinWidth="250" Background="#b3bbc4" VerticalContentAlignment="Center" TextWrapping="NoWrap" MaxLength="8" MaxLines="1" PreviewTextInput="NumberValidationTextBox" PreviewDrop="txtInput_PreviewDrop" PreviewKeyDown="txtInput_PreviewKeyDown">
+                <TextBox Name="txtInput" FontSize="14" MinWidth="250" Background="#b3bbc4" VerticalContentAlignment="Center" TextWrapping="NoWrap" MaxLength="8" MaxLines="1" PreviewTextInput="NumberValidationTextBox" PreviewDrop="txtInput_PreviewDrop" PreviewKeyDown="txtInput_PreviewKeyDown">
                     <TextBox.BorderThickness>
                         <Thickness Left="0"/>
                     </TextBox.BorderThickness>

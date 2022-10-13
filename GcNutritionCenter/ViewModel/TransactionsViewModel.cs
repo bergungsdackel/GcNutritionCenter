@@ -75,7 +75,6 @@ namespace GcNutritionCenter
 
         public override void Dispose()
         {
-            // TODO: Save to file/server
             this.Save();
 
 
