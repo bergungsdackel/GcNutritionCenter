@@ -7,6 +7,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace GcNutritionCenter
 {
@@ -43,7 +45,6 @@ namespace GcNutritionCenter
         public TransactionsViewModel(object parent) : base(parent)
         {
             TransactionList = new ObservableCollection<Transaction>();
-            // TODO: here maybe load from file/server?
             var tmpList = JsonFile.ReadFromFile<ObservableCollection<Transaction>>(fileName);
             if(tmpList != null)
             {
@@ -72,6 +73,31 @@ namespace GcNutritionCenter
             JsonFile.SaveToFile(TransactionList, fileName);
         }
 
+        #region Command definitions
+
+        private ICommand _lostFocusCommand;
+        public ICommand LostFocusCommand
+        {
+            get
+            {
+                return _lostFocusCommand ?? (_lostFocusCommand = new RelayCommand(param => true, param => this.OnLostFocus(param)));
+            }
+        }
+
+        #endregion
+
+        #region Command
+
+        private void OnLostFocus(object param)
+        {
+            if (param != null && param is DataGrid)
+            {
+                DataGrid transactionsGrid = (DataGrid)param;
+                transactionsGrid.UnselectAll();
+            }
+        }
+
+        #endregion
 
         public override void Dispose()
         {

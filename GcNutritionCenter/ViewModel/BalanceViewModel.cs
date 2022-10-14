@@ -14,6 +14,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace GcNutritionCenter
@@ -88,7 +89,6 @@ namespace GcNutritionCenter
         public BalanceViewModel(object parent) : base(parent)
         {
             CustomerList = new ObservableCollection<Customer>();
-            // TODO: here maybe load from file/server?
             ObservableCollection<Customer>? tmpList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);
             if (tmpList != null)
             {
@@ -193,13 +193,32 @@ namespace GcNutritionCenter
             }
         }
 
+        private ICommand _lostFocusCommand;
+        public ICommand LostFocusCommand
+        {
+            get
+            {
+                return _lostFocusCommand ?? (_lostFocusCommand = new RelayCommand(param => true, param => this.OnLostFocus(param)));
+            }
+        }
+
         #endregion
 
         #region Commands
 
+        // TODO: Bug - if unselectall then "Kunde löschen" is no accessible anymore
+        private void OnLostFocus(object param)
+        {
+            if(param != null && param is DataGrid)
+            {
+                DataGrid customerGrid = (DataGrid)param;
+                customerGrid.UnselectAll();
+            }
+        }
+
         private bool CanDeleteSearchText()
         {
-            return (SearchBoxText != String.Empty && SearchBoxText != null);
+            return (SearchBoxText != null && SearchBoxText != String.Empty);
         }
         private void DeleteSearchText()
         {

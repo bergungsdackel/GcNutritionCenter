@@ -11,12 +11,25 @@ namespace GcNutritionCenter
 {
     internal class JsonFile
     {
-        public static void SaveToFile(object value, string filename, string? path = null)
+
+        private class HelperObjectToSave<T>
         {
-            // TODO: With field names?
-            //var tupleToSerialize = (Timestamp: DateTime.UtcNow, Values: value);
-            //string jsonString = JsonSerializer.Serialize(new { tupleToSerialize.Timestamp, tupleToSerialize.Values }, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true });
-            string jsonString = JsonSerializer.Serialize((DateTime.UtcNow, value), new JsonSerializerOptions { WriteIndented = true, IncludeFields = true });
+            public HelperObjectToSave(T values, DateTime timestamp = default(DateTime))
+            {
+                this.values = values;
+                this.timestamp = timestamp;
+            }
+
+            public DateTime timestamp { get; set; }
+
+            public T values { get; set; }
+        }
+
+        public static void SaveToFile<T>(T values, string filename, string? path = null, string? pathToServer = null)
+        {
+            HelperObjectToSave<T> helperObject = new HelperObjectToSave<T>(values, DateTime.UtcNow);
+
+            string jsonString = JsonSerializer.Serialize(helperObject, new JsonSerializerOptions { WriteIndented = true });
             string saveToDir = Directory.GetCurrentDirectory();
 
             if (path != null)
@@ -35,9 +48,13 @@ namespace GcNutritionCenter
             File.WriteAllText(fullPath, jsonString);
 
             // TODO: Store jsonString as binary(?) in SQL
+            if(pathToServer != null)
+            {
+                // to ftp?
+            }
         }
 
-        public static T? ReadFromFile<T>(string filename, string? path = null)
+        public static T? ReadFromFile<T>(string filename, string? path = null, string? pathToServer = null)
         {
             try
             {
@@ -62,16 +79,27 @@ namespace GcNutritionCenter
                 if(File.Exists(fullPath))
                 {
                     string jsonString = File.ReadAllText(fullPath);
-                    Tuple<DateTime, T> _obj = JsonSerializer.Deserialize<Tuple<DateTime, T>>(jsonString, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true })!;
-                    DateTime timestampUtc = _obj.Item1.ToLocalTime();
+                    HelperObjectToSave<T> _obj = JsonSerializer.Deserialize<HelperObjectToSave<T>> (jsonString, new JsonSerializerOptions { WriteIndented = true })!;
+                    DateTime timestampUtc = _obj.timestamp.ToLocalTime();
 
                     // TODO: Read binary(?) from sql then to string and JsonSerializer.Deserialize
+                    if(pathToServer != null)
+                    {
+                        // from ftp?
+                    }
 
-                    return _obj.Item2;
+                    try
+                    {
+                        return _obj.values;
+                    }
+                    catch(InvalidCastException)
+                    {
+                        return default;
+                    }
                 }
                 else
                 {
-                    return default(T);
+                    return default;
                 }
 
             }

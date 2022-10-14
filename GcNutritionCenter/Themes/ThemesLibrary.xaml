@@ -112,7 +112,6 @@
             <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="Transparent" />
         </Style.Resources>
         <!-- // TODO: Add ScrolLBar style, workaround: changing style of EVERY scrollbar -->
-        <!-- // TODO: Add "LostFocus"-Event -->
         <!--<Style.Resources>
             <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource ScrollBarDefault}"/>
         </Style.Resources>-->
@@ -128,7 +127,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
     </Style>
     <Style x:Key="DataGridCellDefault" TargetType="{x:Type DataGridCell}">
-        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Padding" Value="4"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridCell}">

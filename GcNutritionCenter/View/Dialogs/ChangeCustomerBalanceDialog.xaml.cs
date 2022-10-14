@@ -27,6 +27,7 @@ namespace GcNutritionCenter
         {
             get 
             {
+                // TODO: maybe overthink this one because of comma, dot, ...
                 if (Decimal.TryParse(txtInput.Text.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out decimal result))
                     return result;
                 else
