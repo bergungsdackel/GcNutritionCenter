@@ -18,6 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace GcNutritionCenter
 {
@@ -91,6 +92,8 @@ namespace GcNutritionCenter
 
         public BalanceViewModel(object parent) : base(parent)
         {
+            //this._logger = ??? 
+
             CustomerList = new ObservableCollection<Customer>();
             ObservableCollection<Customer>? tmpList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);
             if (tmpList != null)
