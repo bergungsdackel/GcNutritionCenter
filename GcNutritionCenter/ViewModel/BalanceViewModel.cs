@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Extensions.Logging;
 
 namespace GcNutritionCenter
 {
@@ -25,7 +26,7 @@ namespace GcNutritionCenter
     {
         private const string fileName = "data.json";
 
-        private readonly ILogger _logger;
+        private readonly ILogger<BalanceViewModel> _logger;
 
 
         private ObservableCollection<Customer> _CustomerList;
