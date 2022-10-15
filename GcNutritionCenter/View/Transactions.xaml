@@ -10,7 +10,8 @@
     <Grid Background="#9199a3">
 
         <DataGrid Name="TransactionsGrid" Background="#9199a3" Grid.Row="0" Margin="5,45,5,5"  ItemsSource="{Binding TransactionList}" SelectedItem="{Binding SelectedTransaction}" AutoGenerateColumns="False" CanUserAddRows="False"
-                  ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionMode="Single" HeadersVisibility="Column" Style="{DynamicResource DataGridDefault}">
+                  ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionMode="Single" HeadersVisibility="Column" 
+                  Style="{DynamicResource DataGridDefault}" CanUserReorderColumns="False">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Transaktions-ID" Binding="{Binding TransactionID}" Width="Auto" IsReadOnly="True"/>

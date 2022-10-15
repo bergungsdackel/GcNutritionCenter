@@ -16,9 +16,11 @@ namespace GcNutritionCenter
         {
             public HelperObjectToSave(T values, DateTime timestamp = default(DateTime))
             {
+                this.version = typeof(JsonFile).Assembly.GetName().Version ?? new Version();
                 this.values = values;
                 this.timestamp = timestamp;
             }
+            public System.Version version { get; set; }
 
             public DateTime timestamp { get; set; }
 
@@ -56,27 +58,27 @@ namespace GcNutritionCenter
 
         public static T? ReadFromFile<T>(string filename, string? path = null, string? pathToServer = null)
         {
-            try
+            string readFromDir = Directory.GetCurrentDirectory();
+
+            if (path != null)
             {
-                string readFromDir = Directory.GetCurrentDirectory();
-
-                if (path != null)
+                if (Directory.Exists(path))
                 {
-                    if (Directory.Exists(path))
-                    {
-                        readFromDir = path;
-                    }
+                    readFromDir = path;
                 }
+            }
 
-                string _filename = filename;
-                if (!filename.Contains(".json"))
-                {
-                    _filename = _filename + ".json";
-                }
+            string _filename = filename;
+            if (!filename.Contains(".json"))
+            {
+                _filename = _filename + ".json";
+            }
 
-                string fullPath = Path.Combine(readFromDir, _filename);
+            string fullPath = Path.Combine(readFromDir, _filename);
 
-                if(File.Exists(fullPath))
+            if(File.Exists(fullPath))
+            {
+                try
                 {
                     string jsonString = File.ReadAllText(fullPath);
                     HelperObjectToSave<T> _obj = JsonSerializer.Deserialize<HelperObjectToSave<T>> (jsonString, new JsonSerializerOptions { WriteIndented = true })!;
@@ -88,6 +90,7 @@ namespace GcNutritionCenter
                         // from ftp?
                     }
 
+                    // TODO: Good programming?
                     try
                     {
                         return _obj.values;
@@ -97,13 +100,25 @@ namespace GcNutritionCenter
                         return default;
                     }
                 }
-                else
+                catch(Exception)
                 {
-                    return default;
+                    // backup old file, because it actually exists
+
+                    string backupFolderPath = Path.Combine(readFromDir, "Backups");
+                    if(!Directory.Exists(backupFolderPath))
+                    {
+                        Directory.CreateDirectory(backupFolderPath);
+                    }
+
+                    string backupFilePath = Path.Combine(backupFolderPath, $"{_filename}_{DateTime.Now:HH-mm-ss-dd-MM-yyyy}");
+
+                    File.Copy(fullPath, backupFilePath); // maybe here try catch and log error
+
+                    return default; // anyway return default
                 }
 
             }
-            catch(System.IO.FileNotFoundException)
+            else
             {
                 return default;
             }

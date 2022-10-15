@@ -237,7 +237,7 @@ namespace GcNutritionCenter
             {
                if(txtBoxText.Length > 0)
                 {
-                    var filtered = CustomerList.Where(x => ((x.FirstName!.IndexOf(txtBoxText, 0, StringComparison.OrdinalIgnoreCase) != -1) || (x.LastName!.IndexOf(txtBoxText, 0, StringComparison.OrdinalIgnoreCase) != -1) || x.UserID.ToString().Contains(txtBoxText)));
+                    var filtered = CustomerList.Where(x => ((x.FirstName?.IndexOf(txtBoxText, 0, StringComparison.OrdinalIgnoreCase) != -1) || (x.LastName?.IndexOf(txtBoxText, 0, StringComparison.OrdinalIgnoreCase) != -1) || x.UserID.ToString().Contains(txtBoxText)));
                     ItemsSource = new ObservableCollection<Customer>(filtered);
                 }
                 else
@@ -256,8 +256,8 @@ namespace GcNutritionCenter
             if(param != null && param is System.Windows.Controls.DataGridCellInfo)
             {
                 System.Windows.Controls.DataGridCellInfo cell = (System.Windows.Controls.DataGridCellInfo)param;
-
-                if(cell.Column.Header.Equals("Guthaben"))
+                                
+                if(cell.Column.Header.Equals("Guthaben")) // TODO: Dynamisch
                 {
                     if(cell.Item != null && cell.Item is Customer)
                     {

@@ -43,7 +43,7 @@
 
         <DataGrid Background="#9199a3" Name="CustomerGrid" Grid.Row="1" Margin="5"  ItemsSource="{Binding ItemsSource}" SelectedItem="{Binding SelectedCustomer}" AutoGenerateColumns="False"
                   ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" CanUserAddRows="False" SelectionMode="Single"
-                  HeadersVisibility="Column" Style="{DynamicResource DataGridDefault}">
+                  HeadersVisibility="Column" Style="{DynamicResource DataGridDefault}" CanUserReorderColumns="False">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Kundennummer" Binding="{Binding UserID}" Width="Auto" IsReadOnly="True"/>
