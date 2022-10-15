@@ -12,6 +12,7 @@ using System.Windows.Input;
 
 namespace GcNutritionCenter
 {
+    // TODO: Delete all transactions
     internal class TransactionsViewModel : BaseViewModel
     {
         const string fileName = "transactions.json";

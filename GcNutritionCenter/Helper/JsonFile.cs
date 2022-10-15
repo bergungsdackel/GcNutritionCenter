@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace GcNutritionCenter
 {
+    // TODO: Do a bulk save/read test
     internal class JsonFile
     {
+        private const string alternativeAppdataFolderName = "Team DMA AppData folder";
 
         private class HelperObjectToSave<T>
         {
@@ -27,17 +29,19 @@ namespace GcNutritionCenter
             public T values { get; set; }
         }
 
-        public static void SaveToFile<T>(T values, string filename, string? path = null, string? pathToServer = null)
+        public static void SaveToFile<T>(T values, string filename, string? customPath = null, string? pathToServer = null)
         {
             HelperObjectToSave<T> helperObject = new HelperObjectToSave<T>(values, DateTime.UtcNow);
 
             string jsonString = JsonSerializer.Serialize(helperObject, new JsonSerializerOptions { WriteIndented = true });
-            string saveToDir = Directory.GetCurrentDirectory();
+            //string saveToDir = Directory.GetCurrentDirectory();
+            string saveToDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? alternativeAppdataFolderName);
+            Directory.CreateDirectory(saveToDir);
 
-            if (path != null)
+            if (customPath != null)
             {
-                Directory.CreateDirectory(path);
-                saveToDir = path;
+                Directory.CreateDirectory(customPath);
+                saveToDir = customPath;
             }
 
             string _filename = filename;
@@ -56,15 +60,16 @@ namespace GcNutritionCenter
             }
         }
 
-        public static T? ReadFromFile<T>(string filename, string? path = null, string? pathToServer = null)
+        public static T? ReadFromFile<T>(string filename, string? customPath = null, string? pathToServer = null)
         {
-            string readFromDir = Directory.GetCurrentDirectory();
+            //string readFromDir = Directory.GetCurrentDirectory();
+            string readFromDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? alternativeAppdataFolderName);
 
-            if (path != null)
+            if (customPath != null)
             {
-                if (Directory.Exists(path))
+                if (Directory.Exists(customPath))
                 {
-                    readFromDir = path;
+                    readFromDir = customPath;
                 }
             }
 
@@ -105,10 +110,7 @@ namespace GcNutritionCenter
                     // backup old file, because it actually exists
 
                     string backupFolderPath = Path.Combine(readFromDir, "Backups");
-                    if(!Directory.Exists(backupFolderPath))
-                    {
-                        Directory.CreateDirectory(backupFolderPath);
-                    }
+                    Directory.CreateDirectory(backupFolderPath);
 
                     string backupFilePath = Path.Combine(backupFolderPath, $"{_filename}_{DateTime.Now:HH-mm-ss-dd-MM-yyyy}");
 

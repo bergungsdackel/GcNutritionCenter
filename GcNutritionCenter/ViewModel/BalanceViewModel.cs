@@ -1,4 +1,5 @@
 ﻿using Microsoft.Windows.Themes;
+using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,11 +20,12 @@ using System.Windows.Input;
 
 namespace GcNutritionCenter
 {
+    // TODO: Logger
     internal class BalanceViewModel : BaseViewModel
     {
-        const string fileName = "data.json";
+        private const string fileName = "data.json";
 
-
+        private readonly ILogger _logger;
 
 
         private ObservableCollection<Customer> _CustomerList;
@@ -322,10 +324,10 @@ namespace GcNutritionCenter
             {
                 if(SelectedCustomer != null)
                 {
-                    CustomDialog areYouSureDialog = new CustomDialog($"Bist du sicher, dass du den Kunden \"{(SelectedCustomer.FirstName + SelectedCustomer.LastName).Trim()}\" löschen möchtest?", CustomDialog.InputType.YesNo);
+                    CustomDialog areYouSureDialog = new CustomDialog($"Bist du sicher, dass du den Kunden \"{(SelectedCustomer.FirstName + " " + SelectedCustomer.LastName).Trim()}\" löschen möchtest?", CustomDialog.InputType.YesNo);
                     if(areYouSureDialog.ShowDialog() == true)
                     {
-                        CustomDialog deleteTransactionsDialog = new CustomDialog($"Möchtest du auch alle relevanten Transaktionen zu \"{(SelectedCustomer.FirstName + SelectedCustomer.LastName).Trim()}\" löschen?", CustomDialog.InputType.YesNo);
+                        CustomDialog deleteTransactionsDialog = new CustomDialog($"Möchtest du auch alle relevanten Transaktionen zu \"{(SelectedCustomer.FirstName + " " + SelectedCustomer.LastName).Trim()}\" löschen?", CustomDialog.InputType.YesNo);
                         if (deleteTransactionsDialog.ShowDialog() == true)
                         {
                             MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
