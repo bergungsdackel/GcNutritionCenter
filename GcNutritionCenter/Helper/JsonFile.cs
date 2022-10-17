@@ -12,7 +12,7 @@ namespace GcNutritionCenter
     // TODO: Do a bulk save/read test
     internal class JsonFile
     {
-        private const string alternativeAppdataFolderName = "Team DMA AppData folder";
+        private const string alternativeAppdataFolderName = "TeamDmaAppDataFolder";
 
         private class HelperObjectToSave<T>
         {

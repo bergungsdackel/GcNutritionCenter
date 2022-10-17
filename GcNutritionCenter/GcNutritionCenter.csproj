@@ -39,6 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TeamDMA.Core\TeamDMA.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\Icons\closeBtn_default.png" />
     <Resource Include="Images\Icons\closeBtn_MouseOver.png" />
     <Resource Include="Images\Icons\img_balance.png" />

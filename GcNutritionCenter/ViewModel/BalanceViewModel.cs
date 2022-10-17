@@ -1,5 +1,4 @@
 ﻿using Microsoft.Windows.Themes;
-using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,18 +16,17 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using TeamDMA.Core.Logging;
+using TeamDMA.Core.TestData;
 
 namespace GcNutritionCenter
 {
-    // TODO: Logger
+    // TODO: Logger with NLog
     internal class BalanceViewModel : BaseViewModel
     {
         private const string fileName = "data.json";
 
-        private readonly ILogger<BalanceViewModel> _logger;
-
+        //private static readonly ILogger Logger = Log.GetLogger<BalanceViewModel>();
 
         private ObservableCollection<Customer> _CustomerList;
         public ObservableCollection<Customer> CustomerList
@@ -92,7 +90,7 @@ namespace GcNutritionCenter
 
         public BalanceViewModel(object parent) : base(parent)
         {
-            //this._logger = ??? 
+            //Logger.Debug("This is a BalanceViewModel test debug message");
 
             CustomerList = new ObservableCollection<Customer>();
             ObservableCollection<Customer>? tmpList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);
