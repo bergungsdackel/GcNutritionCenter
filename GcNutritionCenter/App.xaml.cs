@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,14 +17,26 @@ namespace GcNutritionCenter
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            MainWindow = new MainWindow()
+            string procName = Process.GetCurrentProcess().ProcessName;     
+            Process[] processes = Process.GetProcessesByName(procName);
+
+            if (processes.Length > 1) // running
             {
-                DataContext = new MainWindowViewModel(this)
-            };
+                // TODO: Nice message box to show the user that it is already running
+                MessageBox.Show(procName + " läuft bereits");
+                return;
+            }
+            else
+            {
+                MainWindow = new MainWindow()
+                {
+                    DataContext = new MainWindowViewModel(this)
+                };
 
-            MainWindow.Show();
+                MainWindow.Show();
 
-            base.OnStartup(e);
+                base.OnStartup(e);
+            }
         }
     }
 }

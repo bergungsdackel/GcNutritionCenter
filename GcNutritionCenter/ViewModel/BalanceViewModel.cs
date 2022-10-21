@@ -26,7 +26,7 @@ namespace GcNutritionCenter
     {
         private const string fileName = "data.json";
 
-        //private static readonly ILogger Logger = Log.GetLogger<BalanceViewModel>();
+        //private readonly ILog Logger = Log.GetLogger<BalanceViewModel>();
 
         private ObservableCollection<Customer> _CustomerList;
         public ObservableCollection<Customer> CustomerList
@@ -90,7 +90,9 @@ namespace GcNutritionCenter
 
         public BalanceViewModel(object parent) : base(parent)
         {
-            //Logger.Debug("This is a BalanceViewModel test debug message");
+            // DEBUG
+            Log.TestLogger<BalanceViewModel>("HELLO WORLD");
+            //
 
             CustomerList = new ObservableCollection<Customer>();
             ObservableCollection<Customer>? tmpList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);

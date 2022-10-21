@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GcNutritionCenter" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="MainWindow" 
+        Title="GC Nutrition Center" 
         Height="600" 
         Width="800"
         ResizeMode="NoResize"
