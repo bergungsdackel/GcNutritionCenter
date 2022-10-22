@@ -93,6 +93,8 @@ namespace GcNutritionCenter
                 customer.PropertyChanged += CustomerChanged;
             }
             CustomerList.CollectionChanged += CustomerListChanged;
+
+            Logger.Debug("Constructor finished.");
         }
 
         ~BalanceViewModel()
