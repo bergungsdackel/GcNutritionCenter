@@ -6,9 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GcNutritionCenter
+namespace TeamDMA.Core.ViewModel
 {
-    abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
+    public abstract class BaseViewModel : INotifyPropertyChanged, IDisposable
     {
         private object? _ParentViewModel;
         public object? ParentViewModel

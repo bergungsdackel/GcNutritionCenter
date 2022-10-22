@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GcNutritionCenter
+namespace TeamDMA.Core.Model
 {
-    abstract class BaseModel : INotifyPropertyChanged
+    public abstract class BaseModel : INotifyPropertyChanged
     {
 
         protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = "")

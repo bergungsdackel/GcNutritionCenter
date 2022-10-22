@@ -7,7 +7,8 @@ using System.Windows.Input;
 
 namespace GcNutritionCenter
 {
-    internal class RelayCommand : ICommand
+    // TOOD: Outsource to TeamDMA.Core
+    public class RelayCommand : ICommand
     {
         private readonly Predicate<object> _canExecute;
         private readonly Action<object> _execute;

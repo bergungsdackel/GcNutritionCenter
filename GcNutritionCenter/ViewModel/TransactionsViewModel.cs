@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net.Repository.Hierarchy;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -9,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TeamDMA.Core.Logging;
+using TeamDMA.Core.ViewModel;
+using TeamDMA.Core.Helper;
 
 namespace GcNutritionCenter
 {
@@ -16,6 +20,8 @@ namespace GcNutritionCenter
     internal class TransactionsViewModel : BaseViewModel
     {
         const string fileName = "transactions.json";
+
+        private static readonly ILogger Logger = LogManager.GetLogger<TransactionsViewModel>();
 
         private ObservableCollection<Transaction> _TransactionList;
         public ObservableCollection<Transaction> TransactionList
@@ -55,6 +61,7 @@ namespace GcNutritionCenter
             // add events
             TransactionList.CollectionChanged += TransactionListChanged;
 
+            Logger.Debug("Constructor finished.");
         }
 
         private void TransactionListChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -102,6 +109,8 @@ namespace GcNutritionCenter
 
         public override void Dispose()
         {
+            Logger.Debug("Disposing.");
+
             this.Save();
 
 

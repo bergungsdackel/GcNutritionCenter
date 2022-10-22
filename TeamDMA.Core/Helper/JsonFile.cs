@@ -7,12 +7,15 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TeamDMA.Core.Helper;
+using TeamDMA.Core.Logging;
 
-namespace GcNutritionCenter
+namespace TeamDMA.Core.Helper
 {
     // TODO: Do a bulk save/read test
-    internal class JsonFile
+    public class JsonFile
     {
+        private static readonly ILogger Logger = LogManager.GetLogger<JsonFile>();
+
         private class HelperObjectToSave<T>
         {
             public HelperObjectToSave(T values, DateTime timestamp = default(DateTime))
@@ -34,7 +37,7 @@ namespace GcNutritionCenter
 
             string jsonString = JsonSerializer.Serialize(helperObject, new JsonSerializerOptions { WriteIndented = true });
             //string saveToDir = Directory.GetCurrentDirectory();
-            string saveToDir = Configuration.GetCurrentAppDataDir();
+            string saveToDir = Configuration.GetCurrentAppDataDir(System.Reflection.Assembly.GetCallingAssembly());
             Directory.CreateDirectory(saveToDir);
 
             if (customPath != null)
@@ -62,7 +65,7 @@ namespace GcNutritionCenter
         public static T? ReadFromFile<T>(string filename, string? customPath = null, string? pathToServer = null)
         {
             //string readFromDir = Directory.GetCurrentDirectory();
-            string readFromDir = Configuration.GetCurrentAppDataDir();
+            string readFromDir = Configuration.GetCurrentAppDataDir(System.Reflection.Assembly.GetCallingAssembly());
 
             if (customPath != null)
             {
@@ -106,6 +109,8 @@ namespace GcNutritionCenter
                 }
                 catch(Exception)
                 {
+                    Logger.Error("Error while reading file. Doing backup and returning default.");
+
                     // backup old file, because it actually exists
 
                     string backupFolderPath = Path.Combine(readFromDir, "Backups");
@@ -113,7 +118,15 @@ namespace GcNutritionCenter
 
                     string backupFilePath = Path.Combine(backupFolderPath, $"{_filename}_{DateTime.Now:HH-mm-ss-dd-MM-yyyy}");
 
-                    File.Copy(fullPath, backupFilePath); // maybe here try catch and log error
+                    try
+                    {
+                        File.Copy(fullPath, backupFilePath); // maybe here try catch and log error
+                    }
+                    catch(Exception)
+                    {
+                        Logger.Error("Can't copy backup file.");
+                    }
+                    
 
                     return default; // anyway return default
                 }
@@ -121,6 +134,7 @@ namespace GcNutritionCenter
             }
             else
             {
+                Logger.Info($"No file '{_filename}' found. Returning default.");
                 return default;
             }
         }

@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using TeamDMA.Core.Helper;
+using TeamDMA.Core.Logging;
 
 namespace GcNutritionCenter
 {
@@ -15,8 +17,12 @@ namespace GcNutritionCenter
     /// </summary>
     public partial class App : Application
     {
+        private static readonly ILogger Logger = LogManager.GetLogger<App>();
+
         protected override void OnStartup(StartupEventArgs e)
         {
+            Logger.Info("=== STARTING LOGGING");
+
             string procName = Process.GetCurrentProcess().ProcessName;     
             Process[] processes = Process.GetProcessesByName(procName);
 

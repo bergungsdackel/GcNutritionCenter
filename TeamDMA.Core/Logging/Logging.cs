@@ -10,9 +10,9 @@ namespace TeamDMA.Core.Logging
 {
     // TODO: Create a proper logging class
     // TODO: check if file is creating on C:
-    public class Logger<T> : ILogger
+    public class Logger : ILogger
     {
-        ILog _logger = LogManager.GetLogger(typeof(T));
+        private readonly log4net.ILog _logger;
 
         public bool IsDebugEnabled => _logger.IsDebugEnabled;
 
@@ -28,157 +28,156 @@ namespace TeamDMA.Core.Logging
 
         public void Debug(object message)
         {
-            _logger?.Debug(message);
+            _logger.Debug(message);
         }
 
         public void Debug(object message, Exception exception)
         {
-            _logger?.Debug(message, exception);
+            _logger.Debug(message, exception);
         }
 
         public void DebugFormat(string format, params object[] args)
         {
-            _logger?.DebugFormat(format, args);
+            _logger.DebugFormat(format, args);
         }
 
         public void DebugFormat(string format, object arg0)
         {
-            _logger?.DebugFormat(format, arg0);
+            _logger.DebugFormat(format, arg0);
         }
 
         public void DebugFormat(string format, object arg0, object arg1)
         {
-            _logger?.DebugFormat(format, arg0, arg1);
+            _logger.DebugFormat(format, arg0, arg1);
         }
 
         public void DebugFormat(string format, object arg0, object arg1, object arg2)
         {
-            _logger?.DebugFormat(format, arg0, arg1, arg2);
+            _logger.DebugFormat(format, arg0, arg1, arg2);
         }
 
         public void DebugFormat(IFormatProvider provider, string format, params object[] args)
         {
-            _logger?.DebugFormat(provider, format, args);
+            _logger.DebugFormat(provider, format, args);
         }
 
         public void Error(object message)
         {
-            _logger?.Error(message);
+            _logger.Error(message);
         }
 
         public void Error(object message, Exception exception)
         {
-            _logger?.Error(message, exception);
+            _logger.Error(message, exception);
         }
 
         public void ErrorFormat(string format, params object[] args)
         {
-            _logger?.ErrorFormat(format, args);
+            _logger.ErrorFormat(format, args);
         }
 
         public void ErrorFormat(string format, object arg0)
         {
-            _logger?.ErrorFormat(format, arg0);
+            _logger.ErrorFormat(format, arg0);
         }
 
         public void ErrorFormat(string format, object arg0, object arg1)
         {
-            _logger?.ErrorFormat(format, arg0, arg1);
+            _logger.ErrorFormat(format, arg0, arg1);
         }
 
         public void ErrorFormat(string format, object arg0, object arg1, object arg2)
         {
-            _logger?.ErrorFormat(format, arg0, arg1, arg2);
+            _logger.ErrorFormat(format, arg0, arg1, arg2);
         }
 
         public void ErrorFormat(IFormatProvider provider, string format, params object[] args)
         {
-            _logger?.ErrorFormat(provider, format, args);
+            _logger.ErrorFormat(provider, format, args);
         }
 
         public void Fatal(object message)
         {
-            _logger?.Fatal(message);
+            _logger.Fatal(message);
         }
 
         public void Fatal(object message, Exception exception)
         {
-            _logger?.Fatal(message, exception);
+            _logger.Fatal(message, exception);
         }
 
         public void FatalFormat(string format, params object[] args)
         {
-            _logger?.FatalFormat(format, args);
+            _logger.FatalFormat(format, args);
         }
 
         public void FatalFormat(string format, object arg0)
         {
-            _logger?.FatalFormat(format, arg0);
+            _logger.FatalFormat(format, arg0);
         }
 
         public void FatalFormat(string format, object arg0, object arg1)
         {
-            _logger?.FatalFormat(format, arg0, arg1);
+            _logger.FatalFormat(format, arg0, arg1);
         }
 
         public void FatalFormat(string format, object arg0, object arg1, object arg2)
         {
-            _logger?.FatalFormat(format, arg0, arg1, arg2);
+            _logger.FatalFormat(format, arg0, arg1, arg2);
         }
 
         public void FatalFormat(IFormatProvider provider, string format, params object[] args)
         {
-            _logger?.FatalFormat(provider, format, args);
+            _logger.FatalFormat(provider, format, args);
         }
 
-        public ILog GetLogger()
-        {
-            ILog logger = LogManager.GetLogger(typeof(T));
-            return logger;
-        }
+        //public static Logger<T> GetLogger()
+        //{
+        //    Logger<T> _logger = new Logger<T>();
+        //    return _logger;
+        //}
 
         public void Info(object message)
         {
-            _logger?.Info(message);
+            _logger.Info(message);
         }
 
         public void Info(object message, Exception exception)
         {
-            _logger?.Info(message, exception);
+            _logger.Info(message, exception);
         }
 
         public void InfoFormat(string format, params object[] args)
         {
-            _logger?.InfoFormat(format, args);
+            _logger.InfoFormat(format, args);
         }
 
         public void InfoFormat(string format, object arg0)
         {
-            _logger?.InfoFormat(format, arg0);
+            _logger.InfoFormat(format, arg0);
         }
 
         public void InfoFormat(string format, object arg0, object arg1)
         {
-            _logger?.InfoFormat(format, arg0, arg1);
+            _logger.InfoFormat(format, arg0, arg1);
         }
 
         public void InfoFormat(string format, object arg0, object arg1, object arg2)
         {
-            _logger?.InfoFormat(format, arg0, arg1, arg2);
+            _logger.InfoFormat(format, arg0, arg1, arg2);
         }
 
         public void InfoFormat(IFormatProvider provider, string format, params object[] args)
         {
-            _logger?.InfoFormat(format, args);
+            _logger.InfoFormat(format, args);
         }
 
-        public Logger()
+        public Logger(Type type)
         {
-            //var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            //XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+            _logger = log4net.LogManager.GetLogger(type);
 
             // CONFIG
-            Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
+            Hierarchy hierarchy = (Hierarchy)log4net.LogManager.GetRepository();
 
             PatternLayout patternLayout = new PatternLayout();
             patternLayout.ConversionPattern = "%-8level [%date{ISO8601}] [%logger] [thread '%thread']: %message%newline";
@@ -186,17 +185,17 @@ namespace TeamDMA.Core.Logging
 
             RollingFileAppender roller = new RollingFileAppender();
             roller.AppendToFile = true;
-            string pathOfFile = Configuration.GetCurrentAppDataDir(System.Reflection.Assembly.GetCallingAssembly());
+            string pathOfFile = Configuration.GetCurrentAppDataDir();
             string completePath = Path.Combine(pathOfFile, "logs", "app.log");
             roller.File = completePath;
             roller.Layout = patternLayout;
-            roller.MaxSizeRollBackups = 5;
-            roller.MaximumFileSize = "10MB";
+            roller.MaxSizeRollBackups = 10;
+            roller.MaximumFileSize = "1MB";
+            roller.DatePattern = "yyyy-MM-dd";
             roller.RollingStyle = RollingFileAppender.RollingMode.Composite;
-            roller.StaticLogFileName = false;
+            roller.StaticLogFileName = true;
             roller.PreserveLogFileNameExtension = true;
             roller.CountDirection = 1;
-            roller.MaxSizeRollBackups = -1;
             roller.ActivateOptions();
             hierarchy.Root.AddAppender(roller);
 
@@ -217,37 +216,37 @@ namespace TeamDMA.Core.Logging
 
         public void Warn(object message)
         {
-            _logger?.Warn(message);
+            _logger.Warn(message);
         }
 
         public void Warn(object message, Exception exception)
         {
-            _logger?.Warn(message, exception);
+            _logger.Warn(message, exception);
         }
 
         public void WarnFormat(string format, params object[] args)
         {
-            _logger?.WarnFormat(format, args);
+            _logger.WarnFormat(format, args);
         }
 
         public void WarnFormat(string format, object arg0)
         {
-            _logger?.WarnFormat(format, arg0);
+            _logger.WarnFormat(format, arg0);
         }
 
         public void WarnFormat(string format, object arg0, object arg1)
         {
-            _logger?.WarnFormat(format, arg0, arg1);
+            _logger.WarnFormat(format, arg0, arg1);
         }
 
         public void WarnFormat(string format, object arg0, object arg1, object arg2)
         {
-            _logger?.WarnFormat(format, arg0, arg1, arg2);
+            _logger.WarnFormat(format, arg0, arg1, arg2);
         }
 
         public void WarnFormat(IFormatProvider provider, string format, params object[] args)
         {
-            _logger?.WarnFormat(provider, format, args);
+            _logger.WarnFormat(provider, format, args);
         }
     }
 }

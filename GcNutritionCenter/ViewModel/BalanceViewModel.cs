@@ -6,6 +6,8 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TeamDMA.Core.Logging;
+using TeamDMA.Core.ViewModel;
+using TeamDMA.Core.Helper;
 
 namespace GcNutritionCenter
 {
@@ -14,7 +16,7 @@ namespace GcNutritionCenter
     {
         private const string fileName = "data.json";
 
-        private readonly Logger<BalanceViewModel> Logger = new Logger<BalanceViewModel>();
+        private static readonly ILogger Logger = LogManager.GetLogger<BalanceViewModel>();
 
         private ObservableCollection<Customer> _CustomerList;
         public ObservableCollection<Customer> CustomerList
@@ -328,14 +330,15 @@ namespace GcNutritionCenter
                             MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
                             if(parentVM != null)
                             {
+                                // TODO: Better
                                 foreach(Transaction transaction in parentVM.TransactionsViewModel.TransactionList.ToArray())
                                 {
                                     if(transaction.Customer!.UserID == SelectedCustomer.UserID)
                                     {
                                         parentVM.TransactionsViewModel.TransactionList.Remove(transaction);
-                                        Logger.Info($"Deleted transactions for '{SelectedCustomer.UserID}'");
                                     }
                                 }
+                                Logger.Info($"Deleted transactions for '{SelectedCustomer.UserID}'");
                             }
                         }
                         Logger.Info($"Deleted customer '{(SelectedCustomer.FirstName + " " + SelectedCustomer.LastName).Trim()}' ({SelectedCustomer.UserID})");
@@ -353,6 +356,8 @@ namespace GcNutritionCenter
 
         public override void Dispose()
         {
+            Logger.Debug("Disposing.");
+
             this.Save();
 
 

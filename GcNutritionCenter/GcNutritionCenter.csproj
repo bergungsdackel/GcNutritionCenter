@@ -29,10 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fonts\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
   </ItemGroup>
 
@@ -70,6 +66,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Themes\ThemesLibrary.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\Dialogs\CustomDialog.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

@@ -10,6 +10,7 @@ using System.Collections;
 using System.Text.Json.Serialization;
 using System.Windows.Documents;
 using System.Windows.Media.Animation;
+using TeamDMA.Core.Model;
 
 namespace GcNutritionCenter
 {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,12 +10,6 @@
     <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="NBuilder" Version="6.1.0" />
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="log4net.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
