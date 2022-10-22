@@ -6,14 +6,13 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TeamDMA.Core.Helper;
 
 namespace GcNutritionCenter
 {
     // TODO: Do a bulk save/read test
     internal class JsonFile
     {
-        private const string alternativeAppdataFolderName = "TeamDmaAppDataFolder";
-
         private class HelperObjectToSave<T>
         {
             public HelperObjectToSave(T values, DateTime timestamp = default(DateTime))
@@ -35,7 +34,7 @@ namespace GcNutritionCenter
 
             string jsonString = JsonSerializer.Serialize(helperObject, new JsonSerializerOptions { WriteIndented = true });
             //string saveToDir = Directory.GetCurrentDirectory();
-            string saveToDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? alternativeAppdataFolderName);
+            string saveToDir = Configuration.GetCurrentAppDataDir();
             Directory.CreateDirectory(saveToDir);
 
             if (customPath != null)
@@ -63,7 +62,7 @@ namespace GcNutritionCenter
         public static T? ReadFromFile<T>(string filename, string? customPath = null, string? pathToServer = null)
         {
             //string readFromDir = Directory.GetCurrentDirectory();
-            string readFromDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? alternativeAppdataFolderName);
+            string readFromDir = Configuration.GetCurrentAppDataDir();
 
             if (customPath != null)
             {

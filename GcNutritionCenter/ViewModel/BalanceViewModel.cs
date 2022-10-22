@@ -1,23 +1,11 @@
-﻿using Microsoft.Windows.Themes;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Data;
-using System.IO;
-using System.IO.Enumeration;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TeamDMA.Core.Logging;
-using TeamDMA.Core.TestData;
 
 namespace GcNutritionCenter
 {
@@ -26,7 +14,7 @@ namespace GcNutritionCenter
     {
         private const string fileName = "data.json";
 
-        //private readonly ILog Logger = Log.GetLogger<BalanceViewModel>();
+        private readonly Logger<BalanceViewModel> Logger = new Logger<BalanceViewModel>();
 
         private ObservableCollection<Customer> _CustomerList;
         public ObservableCollection<Customer> CustomerList
@@ -90,10 +78,6 @@ namespace GcNutritionCenter
 
         public BalanceViewModel(object parent) : base(parent)
         {
-            // DEBUG
-            Log.TestLogger<BalanceViewModel>("HELLO WORLD");
-            //
-
             CustomerList = new ObservableCollection<Customer>();
             ObservableCollection<Customer>? tmpList = JsonFile.ReadFromFile<ObservableCollection<Customer>>(fileName);
             if (tmpList != null)
@@ -275,16 +259,19 @@ namespace GcNutritionCenter
                             if (inputDialog.ShowDialog() == true && inputDialog.Answer != null)
                             {
                                 decimal addValue = (decimal)inputDialog.Answer;
+                                decimal oldValue = _curCustomer!.Balance;
                                 Transaction generatedTransaction = _curCustomer!.ChangeBalance(addValue);
                                 MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
                                 if(parentVM != null)
                                 {
                                     parentVM.TransactionsViewModel.TransactionList.Add(generatedTransaction);
                                 }
+
+                                Logger.Info($"Changed the balance of '{_curCustomer.UserID}' from {oldValue}€ to {_curCustomer!.Balance}€ (difference {addValue}€)");
                             }
                             else
                             {
-                                // canceled
+                                Logger.Debug("ChangeCustomerBalance aborted.");
                             }
                         }
                     }
@@ -305,16 +292,18 @@ namespace GcNutritionCenter
                 if(firstname.Length + lastname.Length >= 1)
                 {
                     CustomerList.Add(new Customer(firstName: !string.IsNullOrEmpty(firstname) ? firstname : "", lastName: !string.IsNullOrEmpty(lastname) ? lastname : "", collectionToCheckForID: CustomerList));
+                    Logger.Info($"Added new customer '{(firstname + " " + lastname).Trim()}'");
                 }
                 else
                 {
+                    Logger.Debug("name is too short");
                     CustomDialog warningDialog = new CustomDialog("Name zu kurz!", CustomDialog.InputType.Ok);
                     warningDialog.ShowDialog();
                 }
             }
             else
             {
-                // canceled
+                Logger.Debug("AddCustomer aborted.");
             }
         }
 
@@ -342,17 +331,19 @@ namespace GcNutritionCenter
                                     if(transaction.Customer!.UserID == SelectedCustomer.UserID)
                                     {
                                         parentVM.TransactionsViewModel.TransactionList.Remove(transaction);
+                                        Logger.Info($"Deleted transactions for '{SelectedCustomer.UserID}'");
                                     }
                                 }
                             }
                         }
-                        CustomerList.Remove(SelectedCustomer);
+                        Logger.Info($"Deleted customer '{(SelectedCustomer.FirstName + " " + SelectedCustomer.LastName).Trim()}' ({SelectedCustomer.UserID})");
+                        CustomerList.Remove(SelectedCustomer);                        
                     }          
                 }
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Logger.Error(ex.ToString(), ex);
             }
         }
 
