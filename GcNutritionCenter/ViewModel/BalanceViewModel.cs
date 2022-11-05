@@ -257,21 +257,28 @@ namespace GcNutritionCenter
                     {
                         Customer? _curCustomer = cell.Item as Customer;
 
-                        if (IsItemSelected)
+                        if (IsItemSelected && _curCustomer != null)
                         {
                             ChangeCustomerBalanceDialog inputDialog = new ChangeCustomerBalanceDialog();
                             if (inputDialog.ShowDialog() == true && inputDialog.Answer != null)
                             {
                                 decimal addValue = (decimal)inputDialog.Answer;
-                                decimal oldValue = _curCustomer!.Balance;
-                                Transaction generatedTransaction = _curCustomer!.ChangeBalance(addValue);
+                                decimal oldValue = _curCustomer.Balance;
+                                Transaction generatedTransaction = _curCustomer.ChangeBalance(addValue);
                                 MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
-                                if(parentVM != null)
+
+                                Logger.Info($"Changed the balance of '{_curCustomer.UserID}' from {oldValue}€ to {_curCustomer.Balance}€ (difference {addValue}€)");
+
+                                if (parentVM != null)
                                 {
                                     parentVM.TransactionsViewModel.TransactionList.Add(generatedTransaction);
-                                }
 
-                                Logger.Info($"Changed the balance of '{_curCustomer.UserID}' from {oldValue}€ to {_curCustomer!.Balance}€ (difference {addValue}€)");
+                                    // automatically delete customer if zero
+                                    if (_curCustomer.Balance == 0 && parentVM.SettingsViewModel.DeleteCustomerIfZero)
+                                    {
+                                        DeleteCustomer(_curCustomer);
+                                    }
+                                }                                
                             }
                             else
                             {
@@ -321,34 +328,46 @@ namespace GcNutritionCenter
             {
                 if(SelectedCustomer != null)
                 {
-                    CustomDialog areYouSureDialog = new CustomDialog($"Bist du sicher, dass du den Kunden \"{(SelectedCustomer.FirstName + " " + SelectedCustomer.LastName).Trim()}\" löschen möchtest?", CustomDialog.InputType.YesNo);
-                    if(areYouSureDialog.ShowDialog() == true)
-                    {
-                        CustomDialog deleteTransactionsDialog = new CustomDialog($"Möchtest du auch alle relevanten Transaktionen zu \"{(SelectedCustomer.FirstName + " " + SelectedCustomer.LastName).Trim()}\" löschen?", CustomDialog.InputType.YesNo);
-                        if (deleteTransactionsDialog.ShowDialog() == true)
-                        {
-                            MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
-                            if(parentVM != null)
-                            {
-                                // TODO: Better
-                                foreach(Transaction transaction in parentVM.TransactionsViewModel.TransactionList.ToArray())
-                                {
-                                    if(transaction.Customer!.UserID == SelectedCustomer.UserID)
-                                    {
-                                        parentVM.TransactionsViewModel.TransactionList.Remove(transaction);
-                                    }
-                                }
-                                Logger.Info($"Deleted transactions for '{SelectedCustomer.UserID}'");
-                            }
-                        }
-                        Logger.Info($"Deleted customer '{(SelectedCustomer.FirstName + " " + SelectedCustomer.LastName).Trim()}' ({SelectedCustomer.UserID})");
-                        CustomerList.Remove(SelectedCustomer);                        
-                    }          
+                    DeleteCustomer(SelectedCustomer);
                 }
             }
             catch(Exception ex)
             {
-                Logger.Error(ex.ToString(), ex);
+                Logger.Error("Unhandled exception in DeleteCustomer", ex);
+            }
+        }
+
+        public void DeleteCustomer(Customer customer)
+        {
+            try
+            {
+                CustomDialog areYouSureDialog = new CustomDialog($"Bist du sicher, dass du den Kunden \"{(customer.FirstName + " " + customer.LastName).Trim()}\" löschen möchtest?", CustomDialog.InputType.YesNo);
+                if (areYouSureDialog.ShowDialog() == true)
+                {
+                    CustomDialog deleteTransactionsDialog = new CustomDialog($"Möchtest du auch alle relevanten Transaktionen zu \"{(customer.FirstName + " " + customer.LastName).Trim()}\" löschen?", CustomDialog.InputType.YesNo);
+                    if (deleteTransactionsDialog.ShowDialog() == true)
+                    {
+                        MainWindowViewModel? parentVM = ParentViewModel as MainWindowViewModel;
+                        if (parentVM != null)
+                        {
+                            // TODO: Better
+                            foreach (Transaction transaction in parentVM.TransactionsViewModel.TransactionList.ToArray())
+                            {
+                                if (transaction.Customer!.UserID == customer.UserID)
+                                {
+                                    parentVM.TransactionsViewModel.TransactionList.Remove(transaction);
+                                }
+                            }
+                            Logger.Info($"Deleted transactions for '{customer.UserID}'");
+                        }
+                    }
+                    Logger.Info($"Deleted customer '{(customer.FirstName + " " + customer.LastName).Trim()}' ({customer.UserID})");
+                    CustomerList.Remove(customer);
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Error("Unhandled exception in DeleteCustomer(Customer customer)", ex);
             }
         }
 

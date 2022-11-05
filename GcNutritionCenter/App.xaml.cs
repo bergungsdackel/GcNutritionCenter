@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using TeamDMA.Core.Helper;
 using TeamDMA.Core.Logging;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace GcNutritionCenter
 {
@@ -19,29 +21,56 @@ namespace GcNutritionCenter
     {
         private static readonly ILogger Logger = LogManager.GetLogger<App>();
 
+        //public IConfigurationRoot Configuration { get; private set; }
+
+        //private const string settingsFileName = "settings.json";
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            Logger.Info("=== STARTING LOGGING");
-
-            string procName = Process.GetCurrentProcess().ProcessName;     
-            Process[] processes = Process.GetProcessesByName(procName);
-
-            if (processes.Length > 1) // running
+            try
             {
-                // TODO: Nice message box to show the user that it is already running
-                MessageBox.Show(procName + " läuft bereits");
-                return;
-            }
-            else
-            {
-                MainWindow = new MainWindow()
+                Logger.Info("=== STARTING LOGGING");
+
+                string procName = Process.GetCurrentProcess().ProcessName;
+                Process[] processes = Process.GetProcessesByName(procName);
+
+                if (processes.Length > 1) // running
                 {
-                    DataContext = new MainWindowViewModel(this)
-                };
+                    // TODO: Nice message box to show the user that it is already running
+                    MessageBox.Show(procName + " läuft bereits");
+                    return;
+                }
+                else
+                {
+                    //// config
+                    //string pathToSettingsDir = TeamDMA.Core.Helper.Configuration.GetCurrentAppDataDir();
+                    //Directory.CreateDirectory(pathToSettingsDir);
+                    //var completePath = Path.Combine(pathToSettingsDir, settingsFileName);
+                    //if(!File.Exists(completePath))
+                    //{
+                    //    File.Create(completePath);
+                    //}
+                    //var builder = new ConfigurationBuilder()
+                    //    .SetBasePath(pathToSettingsDir)
+                    //    .AddJsonFile(settingsFileName, optional: false, reloadOnChange: true);
 
-                MainWindow.Show();
+                    //Configuration = builder.Build();
+                    ////
 
-                base.OnStartup(e);
+                    MainWindow = new MainWindow()
+                    {
+                        DataContext = new MainWindowViewModel(this)
+                    };
+
+                    MainWindow.Show();
+
+                    base.OnStartup(e);
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Fatal("Unhandled exception in App", ex);
+                throw;
             }
         }
     }

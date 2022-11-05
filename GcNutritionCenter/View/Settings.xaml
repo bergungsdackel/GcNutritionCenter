@@ -7,8 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid>
-        <Label Content="SETTINGS" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF00EDFF"/>
+    <Grid Background="#9199a3">
+        <StackPanel Margin="30">
+            <CheckBox x:Name="checkBoxCustomerDeleteIfZero" Content="Kunden automatisch löschen, wenn Guthaben bei 0€" Style="{DynamicResource SliderCheckBox}" IsChecked="{Binding DeleteCustomerIfZero}"/>
+        </StackPanel>
 
     </Grid>
 </UserControl>

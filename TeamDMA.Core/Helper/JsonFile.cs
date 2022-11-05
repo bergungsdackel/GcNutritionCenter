@@ -107,9 +107,9 @@ namespace TeamDMA.Core.Helper
                         return default;
                     }
                 }
-                catch(Exception)
+                catch(Exception ex)
                 {
-                    Logger.Error("Error while reading file. Doing backup and returning default.");
+                    Logger.Error("Error while reading file. Doing backup and returning default.", ex);
 
                     // backup old file, because it actually exists
 
@@ -122,9 +122,9 @@ namespace TeamDMA.Core.Helper
                     {
                         File.Copy(fullPath, backupFilePath); // maybe here try catch and log error
                     }
-                    catch(Exception)
+                    catch(Exception exInner)
                     {
-                        Logger.Error("Can't copy backup file.");
+                        Logger.Error("Can't copy backup file.", exInner);
                     }
                     
 
